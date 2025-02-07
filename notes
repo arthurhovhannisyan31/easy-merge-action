@@ -1,0 +1,9 @@
+inputs
+  source-branch
+    default: dev
+  target-branch
+    default: main
+  version:
+    required
+    example: X.X.X
+  
