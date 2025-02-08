@@ -6,4 +6,18 @@ inputs
   version:
     required
     example: X.X.X
-  
+
+steps
+  validate version
+    get source tag
+    get target tag
+    compare <version> to source and target branches
+  merge branches
+    set <version> to source branch
+    push source branch
+    merge source to target
+    push target
+    pull target
+    merge target to source
+    push source
+
