@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "strict": false,
+    //    "strictFunctionTypes":  true,
+    //    "strictNullChecks":  true,
+    //    "strictPropertyInitialization":  true,
+    //    "noImplicitAny":  true,
+    "sourceMap": true,
+    "alwaysStrict":  true,
+    "strictBindCallApply":  true,
+    "noImplicitThis":  true,
+    "useUnknownInCatchVariables": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowJs": true,
+    "incremental": true
+  }
+}

@@ -1,17 +1,34 @@
 {
+  "author": "Arthur Hovhannisyan",
   "name": "easy-release-action",
   "type": "module",
   "packageManager": "yarn@4.6.0",
   "scripts": {
-    "build": "yarn ncc build index.ts -m --license licenses.txt"
+    "build": "yarn ncc build index.ts -m --license licenses.txt",
+    "lint": "yarn eslint '**/*.{js,ts,tsx}' --cache --quiet",
+    "lint:warn": "yarn lint --max-warnings 0",
+    "lint:staged": "./configs/scripts/lint-staged.sh",
+    "lint:fix": "yarn lint:warn --fix",
+    "types": "NODE_OPTIONS=--max-old-space-size=8196 tsc -p tsconfig.json --noEmit",
+    "prepare": "corepack install && husky"
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0"
   },
   "devDependencies": {
+    "@eslint/compat": "^1.2",
+    "@eslint/js": "^9.18",
+    "@stylistic/eslint-plugin": "^2.13.0",
     "@types/node": "^22.13.1",
+    "@typescript-eslint/eslint-plugin": "^8.20",
+    "@typescript-eslint/parser": "^8.23.0",
     "@vercel/ncc": "^0.38.3",
-    "typescript": "^5.7.3"
+    "eslint": "^9.18.0",
+    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-plugin-import": "^2.31.0",
+    "husky": "^9.0.11",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20"
   }
 }

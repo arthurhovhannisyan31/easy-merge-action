@@ -21,3 +21,5 @@ steps
     merge target to source
     push source
 
+https://github.com/marketplace/actions/merge-branch
+https://medium.com/@karlstad/create-a-github-actions-workflow-that-auto-merges-the-master-back-to-dev-branch-8b1ebe7009b3
