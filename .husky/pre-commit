@@ -2,6 +2,6 @@
 
 . "$(dirname "$0")/configs/helpers"
 
-printf "Run ⚠️ pre-commit checks\n\n"
+printf "⚠️ Run pre-commit checks\n\n"
 
 validate "types lint:staged"

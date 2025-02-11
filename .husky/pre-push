@@ -2,6 +2,6 @@
 
 . "$(dirname "$0")/configs/helpers"
 
-printf "Run ⚠️ pre-push checks\n\n"
+printf "⚠️ Run pre-push checks\n\n"
 
 validate "types lint:warn"

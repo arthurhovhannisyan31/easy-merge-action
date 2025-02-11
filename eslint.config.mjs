@@ -1,24 +1,15 @@
 /** @import * as eslint from "eslint" */
 
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-
 import globals from "globals";
 
 import eslint from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
 
 import importPlugin from "eslint-plugin-import";
 import stylistic from "@stylistic/eslint-plugin";
+// eslint-disable-next-line import/no-unresolved
 import tsParser from "@typescript-eslint/parser";
+// eslint-disable-next-line import/no-unresolved
 import tseslint from "typescript-eslint";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname
-});
 
 /** @type {eslint.Config} */
 const languageOptionsConfig = {
@@ -40,7 +31,7 @@ const languageOptionsConfig = {
 
 /** @type {eslint.Config[]} */
 const jsConfigs = [{
-  files: ["**/*.js"],
+  files: ["**/*.*js"],
   plugins: {
     "@stylistic": stylistic
   },
@@ -55,7 +46,8 @@ const jsConfigs = [{
   files: ["**/*config.js"],
   rules: {
     "@typescript-eslint/no-var-requires": 0,
-    quotes: ["error", "double"]
+    quotes: ["error", "double"],
+    "import/no-unresolved": 0
   }
 }];
 
@@ -147,61 +139,61 @@ export const importsConfigs = [
   importPlugin.flatConfigs.errors,
   importPlugin.flatConfigs.warnings,
   {
-  settings: {
-    "import/extensions": [
-      ".js",
-      ".mjs",
-      ".ts",
-      ".tsx"
-    ],
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"],
-    },
-    "import/resolver": "eslint-import-resolver-typescript",
-  },
-  files: ["**/*.{js,ts,tsx}"],
-  languageOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-    parser: tsParser,
-    parserOptions: {
-      projectService: true,
-      tsconfigRootDir: import.meta.dirname
-    },
-  },
-  rules: {
-    "import/no-named-as-default": "warn", // TODO
-    "import/prefer-default-export": 0,
-    "import/no-extraneous-dependencies": "warn", // TODO
-    // "import-newlines/enforce": [ // TODO
-    //   "error",
-    //   {
-    //     "max-len": 120,
-    //     semi: true,
-    //     forceSingleLine: false,
-    //   },
-    // ],
-    "import/order": [
-      "error",
-      {
-        groups: [
-          "builtin",
-          "external",
-          "internal",
-          ["parent", "sibling"],
-          "type",
-          "object",
-        ],
-        "newlines-between": "always",
-        alphabetize: {
-          order: "asc",
-          caseInsensitive: true,
-        },
-        warnOnUnassignedImports: true,
+    settings: {
+      "import/extensions": [
+        ".js",
+        ".mjs",
+        ".ts",
+        ".tsx"
+      ],
+      "import/parsers": {
+        "@typescript-eslint/parser": [".ts", ".tsx"],
       },
-    ],
-  }
-}];
+      "import/resolver": "eslint-import-resolver-typescript",
+    },
+    files: ["**/*.{js,ts,tsx}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      parser: tsParser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname
+      },
+    },
+    rules: {
+      "import/no-named-as-default": "warn", // TODO
+      "import/prefer-default-export": 0,
+      "import/no-extraneous-dependencies": "warn", // TODO
+      // "import-newlines/enforce": [ // TODO
+      //   "error",
+      //   {
+      //     "max-len": 120,
+      //     semi: true,
+      //     forceSingleLine: false,
+      //   },
+      // ],
+      "import/order": [
+        "error",
+        {
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            ["parent", "sibling"],
+            "type",
+            "object",
+          ],
+          "newlines-between": "always",
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
+          warnOnUnassignedImports: true,
+        },
+      ],
+    }
+  }];
 
 export default tseslint.config(
   languageOptionsConfig,
