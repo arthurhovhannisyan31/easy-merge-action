@@ -20,12 +20,31 @@ try {
   const PAT = core.getInput("pat");
   const octokit = github.getOctokit(PAT);
 
-  const { data } = await octokit.rest.repos.listTags({
+  const {
+    data: tagsList
+  } = await octokit.rest.repos.listTags({
     owner: "arthurhovhannisyan31", // me
     repo: "easy-release-action" // my repo
   });
   console.log({
-    data
+    tagsList
+  });
+  const latestTag = tagsList[0].name;
+
+  console.log("compare", latestTag, version);
+  // parse tags
+  // validate provided version
+  // check if provided version is not at latest tag
+
+  const {
+    data: branch
+  } = await octokit.rest.repos.getBranch({
+    owner: "arthurhovhannisyan31",
+    repo: "easy-release-action",
+    branch: "main"
+  });
+  console.log({
+    branch
   });
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
