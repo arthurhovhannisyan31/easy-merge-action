@@ -20,8 +20,9 @@ jobs:
     name: Call release action
     steps:
       - uses: actions/checkout@v4
-      - id: easy-release
-        uses: arthurhovhannisyan31/easy-release-action@v0.0.1
+      - name: Easy release call
+        id: easy-release
+        uses: arthurhovhannisyan31/easy-release-action@v0.0.2
         with:
           source-branch: ${{ inputs.source-branch }}
           target-branch: ${{ inputs.target-branch }}
