@@ -1,0 +1,28 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      source-branch:
+        description: "Feature branch to be merged with target branch"
+        default: "develop"
+        required: true
+      target-branch:
+        description: "Branch to merge features from source branch"
+        default: main
+        required: true
+      version:
+        description: "Version tag for release vX.X.X"
+        required: true
+        default: "v0.0.0"
+jobs:
+  tag-validation:
+    runs-on: ubuntu-latest
+    name: Call release action
+    steps:
+      - uses: actions/checkout@v4
+      - id: easy-release
+        uses: arthurhovhannisyan31/easy-release-action@v0.0.1
+        with:
+          source-branch: ${{ inputs.source-branch }}
+          target-branch: ${{ inputs.target-branch }}
+          version: ${{ inputs.version }}
