@@ -16,6 +16,17 @@ try {
   });
 
   core.info("Run code");
+
+  const myToken = core.getInput("myToken");
+  const octokit = github.getOctokit(myToken);
+
+  const { data } = await octokit.rest.repos.listTags({
+    owner: "arthurhovhannisyan31", // me
+    repo: "easy-release-action" // my repo
+  });
+  console.log({
+    data
+  });
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }

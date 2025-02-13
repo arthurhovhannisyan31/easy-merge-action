@@ -13,6 +13,7 @@ inputs:
     description: "Version tag for release vX.X.X"
     required: true
     default: "v0.0.0"
+# secrets: inherit
 runs:
   using: "node20"
   main: "dist/index.js"
