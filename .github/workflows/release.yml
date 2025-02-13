@@ -27,3 +27,4 @@ jobs:
           source-branch: ${{ inputs.source-branch }}
           target-branch: ${{ inputs.target-branch }}
           version: ${{ inputs.version }}
+          pat: ${{ secrets.GITHUB_TOKEN }}

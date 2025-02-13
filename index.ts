@@ -17,8 +17,8 @@ try {
 
   core.info("Run code");
 
-  const myToken = core.getInput("myToken");
-  const octokit = github.getOctokit(myToken);
+  const PAT = core.getInput("pat");
+  const octokit = github.getOctokit(PAT);
 
   const { data } = await octokit.rest.repos.listTags({
     owner: "arthurhovhannisyan31", // me
