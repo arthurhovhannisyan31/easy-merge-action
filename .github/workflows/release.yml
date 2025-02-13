@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Easy release call
         id: easy-release
-        uses: arthurhovhannisyan31/easy-release-action@v0.0.2
+        uses: arthurhovhannisyan31/easy-release-action@v0.0.3
         with:
           source-branch: ${{ inputs.source-branch }}
           target-branch: ${{ inputs.target-branch }}
