@@ -34,20 +34,20 @@ try {
   console.log({
     latestTag
   });
-  // console.log("compare", latestTag.name, version);
-  // // parse tags
-  // // validate provided version
-  // // check if provided version is not at latest tag
-  //
-  // const latestRelease = octokit.rest.repos.getLatestRelease({
-  //   owner: OWNER,
-  //   repo: REPO
-  // });
-  //
-  // console.log({
-  //   latestRelease
-  // });
-  //
+  console.log("compare", latestTag.name, version);
+  // parse tags
+  // validate provided version
+  // check if provided version is not at latest tag
+
+  const latestRelease = octokit.rest.repos.getLatestRelease({
+    owner: OWNER,
+    repo: REPO
+  });
+
+  console.log({
+    latestRelease
+  });
+
   // const {
   //   data: mainBranch
   // } = await octokit.rest.repos.getBranch({
