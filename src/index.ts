@@ -39,6 +39,10 @@ try {
     repo: REPO
   });
 
+  console.log({
+    latestRelease
+  });
+
   const {
     data: mainBranch
   } = await octokit.rest.repos.getBranch({
