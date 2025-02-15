@@ -13,6 +13,10 @@ steps
     get target tag
     compare <version> to source and target branches
   merge branches
+    branches HEADs are not the same
+    source branch HEAD is ahead of target branch HEAD
+    source branch does not have tag
+
     set <version> to source branch
     push source branch
     merge source to target

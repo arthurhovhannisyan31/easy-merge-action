@@ -2,14 +2,6 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      source-branch:
-        description: "Feature branch to be merged with target branch"
-        default: "develop"
-        required: true
-      target-branch:
-        description: "Branch to merge features from source branch"
-        default: main
-        required: true
       version:
         description: "Version tag for release vX.X.X"
         required: true
@@ -24,7 +16,7 @@ jobs:
         id: easy-release
         uses: arthurhovhannisyan31/easy-release-action@v0.0.6
         with:
-          source-branch: ${{ inputs.source-branch }}
-          target-branch: ${{ inputs.target-branch }}
+          source-branch: "develop"
+          target-branch: "main"
           version: ${{ inputs.version }}
           pat: ${{ secrets.GITHUB_TOKEN }}

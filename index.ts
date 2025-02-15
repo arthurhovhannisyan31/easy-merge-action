@@ -29,23 +29,34 @@ try {
   console.log({
     tagsList
   });
-  const latestTag = tagsList[0].name;
-
-  console.log("compare", latestTag, version);
+  const latestTag = tagsList[0];
+  console.log({
+    latestTag
+  });
+  console.log("compare", latestTag.name, version);
   // parse tags
   // validate provided version
   // check if provided version is not at latest tag
 
   const {
-    data: branch
+    data: mainBranch
+  } = await octokit.rest.repos.getBranch({
+    owner: "arthurhovhannisyan31",
+    repo: "easy-release-action",
+    branch: "main"
+  });
+  const {
+    data: devBranch
   } = await octokit.rest.repos.getBranch({
     owner: "arthurhovhannisyan31",
     repo: "easy-release-action",
     branch: "main"
   });
   console.log({
-    branch
+    mainBranch,
+    devBranch
   });
+  // get tag for a commit sha
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }
