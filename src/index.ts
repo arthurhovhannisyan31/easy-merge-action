@@ -8,6 +8,7 @@ try {
   const targetBranch = core.getInput("target-branch");
   const version = core.getInput("version");
   const PAT = core.getInput("pat");
+  const octokit = github.getOctokit(PAT);
 
   console.log({
     sourceBranch,
@@ -16,8 +17,6 @@ try {
   });
 
   core.info("Run code");
-
-  const octokit = github.getOctokit(PAT);
 
   console.log({
     OWNER,
@@ -39,34 +38,37 @@ try {
   // validate provided version
   // check if provided version is not at latest tag
 
-  const latestRelease = octokit.rest.repos.getLatestRelease({
-    owner: OWNER,
-    repo: REPO
-  });
-
-  console.log({
-    latestRelease
-  });
-
-  // const {
-  //   data: mainBranch
-  // } = await octokit.rest.repos.getBranch({
+  // fails
+  // const latestRelease = octokit.rest.repos.getLatestRelease({
   //   owner: OWNER,
-  //   repo: REPO,
-  //   branch: "main"
-  // });
-  // const {
-  //   data: devBranch
-  // } = await octokit.rest.repos.getBranch({
-  //   owner: OWNER,
-  //   repo: REPO,
-  //   branch: "develop"
+  //   repo: REPO
   // });
   //
   // console.log({
-  //   mainBranch,
-  //   devBranch
+  //   latestRelease
   // });
+
+  /* check if target-branch exists */
+  const {
+    data: mainBranch
+  } = await octokit.rest.repos.getBranch({
+    owner: OWNER,
+    repo: REPO,
+    branch: targetBranch // TODO try fake branch name
+  });
+  /* check if source-branch exists */
+  const {
+    data: devBranch
+  } = await octokit.rest.repos.getBranch({
+    owner: OWNER,
+    repo: REPO,
+    branch: sourceBranch
+  });
+
+  console.log({
+    mainBranch,
+    devBranch
+  });
   // get tag for a commit sha
 } catch (error: unknown) {
   core.setFailed((error as Error).message);

@@ -13,8 +13,6 @@ steps
     get target tag
     compare <version> to source and target branches
   merge branches
-    check if sb exists
-    check if tb exists
     check if version is gt latest tag on sb or tb
     branches HEADs are not the same
     source branch HEAD is ahead of target branch HEAD
