@@ -50,7 +50,7 @@ try {
   } = await octokit.rest.repos.getBranch({
     owner: "arthurhovhannisyan31",
     repo: "easy-release-action",
-    branch: "main"
+    branch: "develop"
   });
   console.log({
     mainBranch,
