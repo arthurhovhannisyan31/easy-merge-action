@@ -3,11 +3,9 @@ import * as github from "@actions/github";
 
 try {
   const sourceBranch = core.getInput("source-branch");
-  // check if sb exists
   const targetBranch = core.getInput("target-branch");
-  // check if tb exists
   const version = core.getInput("version");
-  // check if version is gt latest tag on sb or tb
+  const PAT = core.getInput("pat");
 
   console.log({
     sourceBranch,
@@ -17,7 +15,6 @@ try {
 
   core.info("Run code");
 
-  const PAT = core.getInput("pat");
   const octokit = github.getOctokit(PAT);
 
   const {

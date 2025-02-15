@@ -13,6 +13,9 @@ inputs:
     description: "Version tag for release vX.X.X"
     required: true
     default: "v0.0.0"
+  pat:
+    description: "Personal access token"
+    required: true
 # secrets: inherit
 runs:
   using: "node20"
