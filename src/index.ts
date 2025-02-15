@@ -24,16 +24,16 @@ try {
     REPO
   });
 
-  // const {
-  //   data: tagsList
-  // } = await octokit.rest.repos.listTags({
-  //   owner: OWNER,
-  //   repo: REPO
-  // });
-  // const latestTag = tagsList[0];
-  // console.log({
-  //   latestTag
-  // });
+  const {
+    data: tagsList
+  } = await octokit.rest.repos.listTags({
+    owner: OWNER,
+    repo: REPO
+  });
+  const latestTag = tagsList?.[0];
+  console.log({
+    latestTag
+  });
   // console.log("compare", latestTag.name, version);
   // // parse tags
   // // validate provided version
