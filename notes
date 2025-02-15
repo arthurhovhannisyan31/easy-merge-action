@@ -17,13 +17,21 @@ steps
     source branch HEAD is ahead of target branch HEAD
     source branch does not have tag
 
-    set <version> to source branch
-    push source branch
-    merge source to target
+
+
+    set <version> tag to source branch
+    push source branch tag
+    merge source branch to target branch
     push target
     pull target
     merge target to source
     push source
+
+    // separate action
+    create a release with details of what who when
+
+    // separate action
+    post message to slack channel about successful release
 
 https://github.com/marketplace/actions/merge-branch
 https://medium.com/@karlstad/create-a-github-actions-workflow-that-auto-merges-the-master-back-to-dev-branch-8b1ebe7009b3
