@@ -1,7 +1,10 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { OWNER, REPO } from "./constants";
+// import { OWNER, REPO } from "./constants";
+
+const OWNER = "arthurhovhannisyan31";
+const REPO = "easy-release-action";
 
 try {
   const sourceBranch = core.getInput("source-branch");
