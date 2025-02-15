@@ -1,10 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-// import { OWNER, REPO } from "./constants";
-
-const OWNER = "arthurhovhannisyan31";
-const REPO = "easy-release-action";
+import { OWNER, REPO } from "./constants";
 
 try {
   const sourceBranch = core.getInput("source-branch");
@@ -21,6 +18,11 @@ try {
   core.info("Run code");
 
   const octokit = github.getOctokit(PAT);
+
+  console.log({
+    OWNER,
+    REPO
+  });
 
   // const {
   //   data: tagsList
