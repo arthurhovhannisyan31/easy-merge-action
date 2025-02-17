@@ -34,6 +34,14 @@ try {
     latestTag
   });
   console.log("compare", latestTag.name, version);
+
+  // TODO check if version is gt latest tag on sb or tb
+  const isNewVersionValid = true;
+
+  if (!isNewVersionValid) {
+    core.setFailed("Provided tag version is not valid");
+  }
+
   // parse tags
   // validate provided version
   // check if provided version is not at latest tag
@@ -48,15 +56,13 @@ try {
   //   latestRelease
   // });
 
-  /* check if target-branch exists */
   const {
     data: mainBranch
   } = await octokit.rest.repos.getBranch({
     owner: OWNER,
     repo: REPO,
-    branch: targetBranch // TODO try fake branch name
+    branch: targetBranch
   });
-  /* check if source-branch exists */
   const {
     data: devBranch
   } = await octokit.rest.repos.getBranch({
@@ -64,6 +70,14 @@ try {
     repo: REPO,
     branch: sourceBranch
   });
+
+  /* validation */
+  // TODO check if source and target can be merged: git merge-base --is-ancestor HEAD branch1
+  // git merge-base
+  // TODO check branches HEADs are not the same
+  // TODO check source branch HEAD is ahead of target branch HEAD
+
+  // TODO check source branch HEAD does not have tag
 
   console.log({
     mainBranch,
