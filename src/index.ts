@@ -1,13 +1,21 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
-import { inc, valid } from "semver";
+import {
+  coerce,
+  inc,
+  type ReleaseType,
+  type SemVer,
+  valid
+} from "semver";
 
 import { DEFAULT_VERSION, OWNER, REPO } from "./constants";
 
 try {
+  // TODO Allow to run for maintainers and admins only
+
   const sourceBranch = core.getInput("source_branch");
   const targetBranch = core.getInput("target_branch");
-  const releaseType = core.getInput("release_type");
+  const releaseType = core.getInput("release_type") as ReleaseType;
   const PAT = core.getInput("pat");
   const octokit = github.getOctokit(PAT);
 
@@ -32,19 +40,21 @@ try {
     latestVersion,
   });
 
-  const isVersionValid = !!valid(latestVersion);
+  console.log({
+    nextMajor: inc(latestVersion, "major"),
+    nextMinor: inc(latestVersion, "minor"),
+    nextPatch: inc(latestVersion, "patch"),
+  });
 
-  if (isVersionValid) {
-    console.log({
-      nextMajor: inc(latestVersion, "major"),
-      nextMinor: inc(latestVersion, "minor"),
-      nextPatch: inc(latestVersion, "patch"),
-    });
-  }
-
-  if (!isVersionValid) {
+  if (valid(latestVersion)) {
     core.setFailed("Latest tag version is not valid, check git tags");
   }
+
+  const nextVersion = inc(coerce(latestVersion) as SemVer, releaseType);
+
+  console.log({
+    nextVersion
+  });
 
   /* Branch validation */
 
