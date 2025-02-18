@@ -456,6 +456,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/semver@npm:^7":
+  version: 7.5.8
+  resolution: "@types/semver@npm:7.5.8"
+  checksum: 10/3496808818ddb36deabfe4974fd343a78101fa242c4690044ccdc3b95dcf8785b494f5d628f2f47f38a702f8db9c53c67f47d7818f2be1b79f2efb09692e1178
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/eslint-plugin@npm:8.23.0, @typescript-eslint/eslint-plugin@npm:^8.20":
   version: 8.23.0
   resolution: "@typescript-eslint/eslint-plugin@npm:8.23.0"
@@ -1032,6 +1039,7 @@ __metadata:
     "@eslint/js": "npm:^9.18"
     "@stylistic/eslint-plugin": "npm:^2.13.0"
     "@types/node": "npm:^22.13.1"
+    "@types/semver": "npm:^7"
     "@typescript-eslint/eslint-plugin": "npm:^8.20"
     "@typescript-eslint/parser": "npm:^8.23.0"
     "@vercel/ncc": "npm:^0.38.3"
@@ -1039,6 +1047,7 @@ __metadata:
     eslint-import-resolver-typescript: "npm:^3.7.0"
     eslint-plugin-import: "npm:^2.31.0"
     husky: "npm:^9.0.11"
+    semver: "npm:^7.7.1"
     typescript: "npm:^5.7.3"
     typescript-eslint: "npm:^8.20"
   languageName: unknown
@@ -2778,7 +2787,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.3.5, semver@npm:^7.6.0, semver@npm:^7.6.3":
+"semver@npm:^7.3.5, semver@npm:^7.6.0, semver@npm:^7.6.3, semver@npm:^7.7.1":
   version: 7.7.1
   resolution: "semver@npm:7.7.1"
   bin:

@@ -9,10 +9,15 @@ inputs:
     description: "Branch to merge features from source branch"
     default: main
     required: true
-  version:
-    description: "Version tag for release vX.X.X"
+  release-type:
+    description: "Semantic release type"
     required: true
-    default: "v0.0.0"
+    default: "patch"
+    type: choice
+    options:
+      - major
+      - minor
+      - patch
   pat:
     description: "Personal access token"
     required: true

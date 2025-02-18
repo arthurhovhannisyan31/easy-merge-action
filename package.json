@@ -14,13 +14,15 @@
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/github": "^6.0.0"
+    "@actions/github": "^6.0.0",
+    "semver": "^7.7.1"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2",
     "@eslint/js": "^9.18",
     "@stylistic/eslint-plugin": "^2.13.0",
     "@types/node": "^22.13.1",
+    "@types/semver": "^7",
     "@typescript-eslint/eslint-plugin": "^8.20",
     "@typescript-eslint/parser": "^8.23.0",
     "@vercel/ncc": "^0.38.3",

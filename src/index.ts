@@ -1,22 +1,23 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import { inc, valid, parse, coerce } from "semver";
 
-import { OWNER, REPO } from "./constants";
+import { DEFAULT_VERSION, OWNER, REPO } from "./constants";
 
 try {
   const sourceBranch = core.getInput("source-branch");
   const targetBranch = core.getInput("target-branch");
-  const version = core.getInput("version");
+  const releaseType = core.getInput("release-type");
   const PAT = core.getInput("pat");
   const octokit = github.getOctokit(PAT);
 
   console.log({
     sourceBranch,
     targetBranch,
-    version
+    releaseType
   });
 
-  core.info("Run code");
+  /* Version validation */
 
   console.log({
     OWNER,
@@ -33,28 +34,33 @@ try {
   console.log({
     latestTag
   });
-  console.log("compare", latestTag.name, version);
+  const latestVersion = latestTag?.name ?? DEFAULT_VERSION;
+  console.log({
+    latestVersion,
+    releaseType
+  });
 
-  // TODO check if version is gt latest tag on sb or tb
-  const isNewVersionValid = true;
-
-  if (!isNewVersionValid) {
-    core.setFailed("Provided tag version is not valid");
+  const coercedVersion = coerce(latestVersion);
+  const isVersionValid = valid(latestVersion);
+  const parsedVersion = parse(latestVersion);
+  console.log({
+    coercedVersion,
+    isVersionValid,
+    parsedVersion
+  });
+  if (isVersionValid) {
+    console.log({
+      nextMajor: inc(latestVersion, "major"),
+      nextMinor: inc(latestVersion, "minor"),
+      nextPatch: inc(latestVersion, "patch"),
+    });
   }
 
-  // parse tags
-  // validate provided version
-  // check if provided version is not at latest tag
+  if (!isVersionValid) {
+    core.setFailed("Latest tag version is not valid, check git tags");
+  }
 
-  // fails
-  // const latestRelease = octokit.rest.repos.getLatestRelease({
-  //   owner: OWNER,
-  //   repo: REPO
-  // });
-  //
-  // console.log({
-  //   latestRelease
-  // });
+  /* Branch validation */
 
   const {
     data: mainBranch
@@ -83,7 +89,17 @@ try {
     mainBranch,
     devBranch
   });
+  const compare = octokit.rest.repos.compareCommits({
+    owner: OWNER,
+    repo: REPO,
+    base: sourceBranch,
+    head: targetBranch,
+  });
+
   // get tag for a commit sha
+  console.log({
+    compare
+  });
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }
