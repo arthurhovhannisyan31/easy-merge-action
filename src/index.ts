@@ -85,17 +85,21 @@ try {
     mainBranch,
     devBranch
   });
-  const compare = await octokit.rest.repos.compareCommits({
+  const compareCommitsResponse = await octokit.rest.repos.compareCommits({
     owner: OWNER,
     repo: REPO,
     base: sourceBranch,
     head: targetBranch,
   });
 
+  if (compareCommitsResponse.data.status !== "behind") {
+    core.setFailed(`${targetBranch} branch is not behind ${sourceBranch}`);
+  }
+
+  console.log("should exit");
+
   // get tag for a commit sha
-  console.log({
-    compare
-  });
+  console.log(compareCommitsResponse);
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }
