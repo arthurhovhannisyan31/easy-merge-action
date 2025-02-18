@@ -23,5 +23,5 @@ jobs:
         with:
           source-branch: "develop"
           target-branch: "main"
-          version: ${{ inputs.version }}
+          release-type: ${{ inputs.releaseType }}
           pat: ${{ secrets.GITHUB_TOKEN }}
