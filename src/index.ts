@@ -46,7 +46,7 @@ try {
     nextPatch: inc(latestVersion, "patch"),
   });
 
-  if (valid(latestVersion)) {
+  if (!valid(latestVersion)) {
     core.setFailed("Latest tag version is not valid, check git tags");
   }
 
