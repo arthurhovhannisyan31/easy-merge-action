@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Easy release call
         id: easy-release
-        uses: arthurhovhannisyan31/easy-release-action@v0.0.18
+        uses: arthurhovhannisyan31/easy-release-action@v0.0.19
         with:
           source-branch: "develop"
           target-branch: "main"

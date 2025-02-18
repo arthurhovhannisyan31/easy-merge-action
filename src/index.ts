@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
-import { inc, valid, parse, coerce } from "semver";
+import { inc, valid } from "semver";
 
 import { DEFAULT_VERSION, OWNER, REPO } from "./constants";
 
@@ -18,12 +18,6 @@ try {
   });
 
   /* Version validation */
-
-  console.log({
-    OWNER,
-    REPO
-  });
-
   const {
     data: tagsList
   } = await octokit.rest.repos.listTags({
@@ -31,23 +25,15 @@ try {
     repo: REPO
   });
   const latestTag = tagsList?.[0];
-  console.log({
-    latestTag
-  });
   const latestVersion = latestTag?.name ?? DEFAULT_VERSION;
+
   console.log({
+    latestTag,
     latestVersion,
-    releaseType
   });
 
-  const coercedVersion = coerce(latestVersion);
-  const isVersionValid = valid(latestVersion);
-  const parsedVersion = parse(latestVersion);
-  console.log({
-    coercedVersion,
-    isVersionValid,
-    parsedVersion
-  });
+  const isVersionValid = !!valid(latestVersion);
+
   if (isVersionValid) {
     console.log({
       nextMajor: inc(latestVersion, "major"),
@@ -89,7 +75,7 @@ try {
     mainBranch,
     devBranch
   });
-  const compare = octokit.rest.repos.compareCommits({
+  const compare = await octokit.rest.repos.compareCommits({
     owner: OWNER,
     repo: REPO,
     base: sourceBranch,
