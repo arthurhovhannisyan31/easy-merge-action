@@ -1,15 +1,15 @@
 name: "Easy release"
 description: "Merge branches and publish release in one click"
 inputs:
-  source-branch:
+  source_branch:
     description: "Feature branch to be merged with target branch"
     default: "develop"
     required: true
-  target-branch:
+  target_branch:
     description: "Branch to merge features from source branch"
     default: main
     required: true
-  release-type:
+  release_type:
     description: "Semantic release type"
     required: true
     default: "patch"

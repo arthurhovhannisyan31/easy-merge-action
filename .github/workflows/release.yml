@@ -2,7 +2,7 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      release-type:
+      release_type:
         description: "Semantic release type"
         required: true
         default: "patch"
@@ -21,7 +21,7 @@ jobs:
         id: easy-release
         uses: arthurhovhannisyan31/easy-release-action@v0.0.19
         with:
-          source-branch: "develop"
-          target-branch: "main"
-          release-type: ${{ inputs.releaseType }}
+          source_branch: "develop"
+          target_branch: "main"
+          release_type: ${{ inputs.release_type }}
           pat: ${{ secrets.GITHUB_TOKEN }}
