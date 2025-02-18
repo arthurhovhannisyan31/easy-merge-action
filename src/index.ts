@@ -5,9 +5,9 @@ import { inc, valid } from "semver";
 import { DEFAULT_VERSION, OWNER, REPO } from "./constants";
 
 try {
-  const sourceBranch = core.getInput("source-branch");
-  const targetBranch = core.getInput("target-branch");
-  const releaseType = core.getInput("release-type");
+  const sourceBranch = core.getInput("source_branch");
+  const targetBranch = core.getInput("target_branch");
+  const releaseType = core.getInput("release_type");
   const PAT = core.getInput("pat");
   const octokit = github.getOctokit(PAT);
 
