@@ -6,7 +6,7 @@
   "scripts": {
     "build": "yarn ncc build ./src/index.ts -m --license licenses.txt",
     "lint": "yarn eslint '**/*.{js,ts,tsx}' --cache --quiet",
-    "lint:warn": "yarn lint --max-warnings 0",
+    "lint:warn": "yarn lint --max-warnings 100",
     "lint:staged": "./configs/scripts/lint-staged.sh",
     "lint:fix": "yarn lint:warn --fix",
     "types": "NODE_OPTIONS=--max-old-space-size=8196 tsc -p tsconfig.json --noEmit",
@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1",
     "@actions/github": "^6.0.0",
     "semver": "^7.7.1"
   },

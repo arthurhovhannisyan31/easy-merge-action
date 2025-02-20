@@ -1034,7 +1034,6 @@ __metadata:
   resolution: "easy-release-action@workspace:."
   dependencies:
     "@actions/core": "npm:^1.11.1"
-    "@actions/exec": "npm:^1.1.1"
     "@actions/github": "npm:^6.0.0"
     "@eslint/compat": "npm:^1.2"
     "@eslint/js": "npm:^9.18"

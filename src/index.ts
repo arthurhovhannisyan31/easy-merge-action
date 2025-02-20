@@ -1,5 +1,4 @@
 import * as core from "@actions/core";
-import * as exec from "@actions/exec";
 import * as github from "@actions/github";
 import {
   coerce,
@@ -13,8 +12,8 @@ import { DEFAULT_VERSION } from "./constants";
 
 try {
   const pat = core.getInput("pat");
-  const sourceBranch = core.getInput("source_branch");
-  const targetBranch = core.getInput("target_branch");
+  const sourceBranchName = core.getInput("source_branch");
+  const targetBranchName = core.getInput("target_branch");
   const releaseType = core.getInput("release_type") as ReleaseType;
 
   const octokit = github.getOctokit(pat);
@@ -29,6 +28,43 @@ try {
   // TODO Allow to run for maintainers and admins only
   // TODO Check if admin github.context.payload.repository?.sender?.type === 'admin' | 'maintainer'
 
+  /* Branch validation */
+  const {
+    data: targetBranch
+  } = await octokit.rest.repos.getBranch({
+    owner,
+    repo,
+    branch: targetBranchName
+  });
+  const {
+    data: sourceBranch
+  } = await octokit.rest.repos.getBranch({
+    owner,
+    repo,
+    branch: sourceBranchName
+  });
+
+  console.log({
+    targetBranch,
+    sourceBranch
+  });
+
+  const compareCommitsResponse = await octokit.rest.repos.compareCommits({
+    owner,
+    repo,
+    base: sourceBranchName,
+    head: targetBranchName,
+  });
+
+  /* Merge validation */
+  if (compareCommitsResponse.data.status !== "behind") {
+    throw new Error(`${targetBranchName} branch is not behind ${sourceBranchName}`);
+  }
+
+  // if not tag create one
+  // if tag check if it on the source branch head
+  // if tag is not on source branch head create a new one
+
   /* Version validation */
   const {
     data: tagsList
@@ -37,61 +73,37 @@ try {
     repo
   });
   const latestTag = tagsList?.[0];
-  const latestVersion = latestTag?.name ?? DEFAULT_VERSION;
+  console.log({
+    latestTag
+  });
+  // if no latest tag create one
 
-  if (!valid(latestVersion)) {
+  const latestTagName = latestTag?.name;
+
+  if (!valid(latestTagName)) {
     throw new Error("Latest tag version is not valid, check git tags");
   }
 
-  const nextVersion = inc(coerce(latestVersion) as SemVer, releaseType);
+  const nextTag = inc(coerce(latestTagName) as SemVer, releaseType);
 
-  console.log({
-    nextVersion
-  });
-
-  /* Branch validation */
-  const {
-    data: targetBranchData
-  } = await octokit.rest.repos.getBranch({
-    owner,
-    repo,
-    branch: targetBranch
-  });
-  const {
-    data: sourceBranchData
-  } = await octokit.rest.repos.getBranch({
-    owner,
-    repo,
-    branch: sourceBranch
-  });
-
-  // git merge-base
-  // TODO check branches HEADs are not the same
-  // TODO check source branch HEAD is ahead of target branch HEAD
-  // TODO check source branch HEAD does not have tag
-
-  console.log({
-    targetBranchData,
-    sourceBranchData
-  });
-  const compareCommitsResponse = await octokit.rest.repos.compareCommits({
-    owner,
-    repo,
-    base: sourceBranch,
-    head: targetBranch,
-  });
-
-  /* Merge validation */
-  if (compareCommitsResponse.data.status !== "behind") {
-    throw new Error(`${targetBranch} branch is not behind ${sourceBranch}`);
+  if (!nextTag) {
+    throw new Error("Failed creating new tag");
   }
-  throw new Error(`${targetBranch} branch is not behind ${sourceBranch}`);
 
-  console.log("should exit");
+  console.log({
+    nextTag
+  });
 
+  // if (latestTag.commit.sha === sourceBranch.commit.sha) {
+  //   throw new Error(`Source branch already has a tag`);
+  // }
   // get tag for a commit sha
   //
   console.log(compareCommitsResponse);
+
+  // merge
+  // create release
+  // post message to slack
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }
