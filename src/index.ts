@@ -19,6 +19,8 @@ try {
   const PAT = core.getInput("pat");
   const octokit = github.getOctokit(PAT);
 
+  console.log(github.context);
+
   console.log({
     sourceBranch,
     targetBranch,
@@ -59,14 +61,14 @@ try {
   /* Branch validation */
 
   const {
-    data: mainBranch
+    data: targetBranchData
   } = await octokit.rest.repos.getBranch({
     owner: OWNER,
     repo: REPO,
     branch: targetBranch
   });
   const {
-    data: devBranch
+    data: sourceBranchData
   } = await octokit.rest.repos.getBranch({
     owner: OWNER,
     repo: REPO,
@@ -78,12 +80,11 @@ try {
   // git merge-base
   // TODO check branches HEADs are not the same
   // TODO check source branch HEAD is ahead of target branch HEAD
-
   // TODO check source branch HEAD does not have tag
 
   console.log({
-    mainBranch,
-    devBranch
+    targetBranchData,
+    sourceBranchData
   });
   const compareCommitsResponse = await octokit.rest.repos.compareCommits({
     owner: OWNER,
