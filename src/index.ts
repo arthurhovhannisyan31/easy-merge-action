@@ -18,13 +18,24 @@ try {
   const releaseType = core.getInput("release_type") as ReleaseType;
   const PAT = core.getInput("pat");
   const octokit = github.getOctokit(PAT);
-
+  const repo = github.context.payload.repository?.name;
+  const owner = github.context.payload.repository?.owner;
   console.log(github.context);
 
   console.log({
     sourceBranch,
     targetBranch,
     releaseType
+  });
+
+  console.log({
+    repo,
+    owner
+  });
+
+  console.log({
+    owner: OWNER,
+    repo: REPO,
   });
 
   /* Version validation */
