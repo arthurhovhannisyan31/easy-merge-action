@@ -23,7 +23,7 @@ try {
   const owner = github.context.payload.repository?.owner?.login ?? "";
 
   if (!repo || !owner) {
-    core.setFailed("Failed reading repository context");
+    throw new Error("Failed reading repository context");
   }
 
   // TODO Allow to run for maintainers and admins only
@@ -40,7 +40,7 @@ try {
   const latestVersion = latestTag?.name ?? DEFAULT_VERSION;
 
   if (!valid(latestVersion)) {
-    core.setFailed("Latest tag version is not valid, check git tags");
+    throw new Error("Latest tag version is not valid, check git tags");
   }
 
   const nextVersion = inc(coerce(latestVersion) as SemVer, releaseType);
@@ -83,9 +83,9 @@ try {
 
   /* Merge validation */
   if (compareCommitsResponse.data.status !== "behind") {
-    core.setFailed(`${targetBranch} branch is not behind ${sourceBranch}`);
-    await exec.exec("bash", ["exit", "1"]);
+    throw new Error(`${targetBranch} branch is not behind ${sourceBranch}`);
   }
+  throw new Error(`${targetBranch} branch is not behind ${sourceBranch}`);
 
   console.log("should exit");
 
