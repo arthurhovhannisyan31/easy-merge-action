@@ -8,56 +8,35 @@ import {
   valid
 } from "semver";
 
-import { DEFAULT_VERSION, OWNER, REPO } from "./constants";
+import { DEFAULT_VERSION } from "./constants";
 
 try {
-  // TODO Allow to run for maintainers and admins only
-
+  const pat = core.getInput("pat");
   const sourceBranch = core.getInput("source_branch");
   const targetBranch = core.getInput("target_branch");
   const releaseType = core.getInput("release_type") as ReleaseType;
-  const PAT = core.getInput("pat");
-  const octokit = github.getOctokit(PAT);
-  const repo = github.context.payload.repository?.name;
-  const owner = github.context.payload.repository?.owner;
-  console.log(github.context);
 
-  console.log({
-    sourceBranch,
-    targetBranch,
-    releaseType
-  });
+  const octokit = github.getOctokit(pat);
 
-  console.log({
-    repo,
-    owner
-  });
+  const repo = github.context.payload.repository?.name ?? "";
+  const owner = github.context.payload.repository?.owner?.login ?? "";
 
-  console.log({
-    owner: OWNER,
-    repo: REPO,
-  });
+  if (!repo || !owner) {
+    core.setFailed("Failed reading repository context");
+  }
+
+  // TODO Allow to run for maintainers and admins only
+  // TODO Check if admin github.context.payload.repository?.sender?.type === 'admin' | 'maintainer'
 
   /* Version validation */
   const {
     data: tagsList
   } = await octokit.rest.repos.listTags({
-    owner: OWNER,
-    repo: REPO
+    owner,
+    repo
   });
   const latestTag = tagsList?.[0];
   const latestVersion = latestTag?.name ?? DEFAULT_VERSION;
-
-  console.log({
-    latestTag,
-    latestVersion,
-  });
-
-  console.log({
-    nextMajor: inc(latestVersion, "major"),
-    nextMinor: inc(latestVersion, "minor"),
-    nextPatch: inc(latestVersion, "patch"),
-  });
 
   if (!valid(latestVersion)) {
     core.setFailed("Latest tag version is not valid, check git tags");
@@ -70,24 +49,21 @@ try {
   });
 
   /* Branch validation */
-
   const {
     data: targetBranchData
   } = await octokit.rest.repos.getBranch({
-    owner: OWNER,
-    repo: REPO,
+    owner,
+    repo,
     branch: targetBranch
   });
   const {
     data: sourceBranchData
   } = await octokit.rest.repos.getBranch({
-    owner: OWNER,
-    repo: REPO,
+    owner,
+    repo,
     branch: sourceBranch
   });
 
-  /* validation */
-  // TODO check if source and target can be merged: git merge-base --is-ancestor HEAD branch1
   // git merge-base
   // TODO check branches HEADs are not the same
   // TODO check source branch HEAD is ahead of target branch HEAD
@@ -98,12 +74,13 @@ try {
     sourceBranchData
   });
   const compareCommitsResponse = await octokit.rest.repos.compareCommits({
-    owner: OWNER,
-    repo: REPO,
+    owner,
+    repo,
     base: sourceBranch,
     head: targetBranch,
   });
 
+  /* Merge validation */
   if (compareCommitsResponse.data.status !== "behind") {
     core.setFailed(`${targetBranch} branch is not behind ${sourceBranch}`);
   }
