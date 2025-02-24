@@ -82,11 +82,6 @@ export const getNextTagVersion = async (
       type: "commit"
     });
 
-    console.log(
-      github.context,
-    );
-    console.log(branch);
-
     const version = `v${nextTagVersion}`;
 
     const {
@@ -105,7 +100,7 @@ export const getNextTagVersion = async (
     } = await octokit.rest.git.createRef({
       owner,
       repo,
-      ref: `refs/heads/${version}`,
+      ref: `refs/tags/${version}`,
       sha: newTag.sha
     });
 
