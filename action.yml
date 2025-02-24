@@ -18,7 +18,9 @@ inputs:
       - major
       - minor
       - patch
-# secrets: inherit
+outputs:
+  released_tag:
+    description: "Released version tag value v#.#.#"
 runs:
   using: "node20"
   main: "dist/index.js"

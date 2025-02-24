@@ -71,8 +71,7 @@ try {
   }
 
   // if not tag create one
-  // if tag check if it on the source branch head
-  // if tag is not on source branch head create a new one
+  // if tag exists exit with error: Source branch tag already exists
 
   /* Version validation */
   const {
@@ -113,6 +112,9 @@ try {
   // merge
   // create release
   // post message to slack
+
+  // at last
+  core.setOutput("released_tag", nextTag);
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }

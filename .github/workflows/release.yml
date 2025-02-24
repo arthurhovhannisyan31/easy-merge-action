@@ -11,18 +11,24 @@ on:
           - major
           - minor
           - patch
+#    outputs:
+#      released-tag:
+#      release-link:
 jobs:
-  tag-validation:
+  merge:
     runs-on: ubuntu-latest
-    name: Call release action
     steps:
       - uses: actions/checkout@v4
       - name: Easy release call
         id: easy-release
-        uses: arthurhovhannisyan31/easy-release-action@v0.0.31
+        uses: arthurhovhannisyan31/easy-release-action@v0.0.32
         env:
           PAT: ${{ secrets.GITHUB_TOKEN }}
         with:
           source_branch: "develop"
           target_branch: "main"
           release_type: ${{ inputs.release_type }}
+      - name: Log tag
+        run: |
+          echo ${{ steps.easy-release.outputs.released_tag }}
+
