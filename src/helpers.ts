@@ -44,9 +44,6 @@ export const getNextTagVersion = async (
     repo,
   });
   const latestTag = tagsList?.[0];
-  console.log({
-    latestTag
-  });
 
   const latestTagVersion = latestTag?.name;
 
@@ -58,57 +55,32 @@ export const getNextTagVersion = async (
 
   const isLatestTagAtSourceHead = branch.commit.sha === latestTag.commit.sha;
 
-  console.log({
-    isLatestTagAtSourceHead
-  });
-
   if (!isLatestTagAtSourceHead) {
     nextTagVersion = inc(coerce(latestTagVersion) as SemVer, releaseType) as string;
-
-    console.log({
-      nextTagVersion
-    });
 
     if (!nextTagVersion) {
       throw new Error("Failed creating new tag");
     }
 
-    console.log({
-      owner,
-      repo,
-      tag: `v${nextTagVersion}`,
-      message: "",
-      object: branch.commit.sha,
-      type: "commit"
-    });
-
-    const version = `v${nextTagVersion}`;
+    nextTagVersion = `v${nextTagVersion}`;
 
     const {
       data: newTag,
     } = await octokit.rest.git.createTag({
       owner,
       repo,
-      tag: version,
+      tag: nextTagVersion,
       message: "",
       object: branch.commit.sha,
       type: "commit"
     });
 
-    const {
-      data: newTagRef
-    } = await octokit.rest.git.createRef({
+    await octokit.rest.git.createRef({
       owner,
       repo,
-      ref: `refs/tags/${version}`,
+      ref: `refs/tags/${nextTagVersion}`,
       sha: newTag.sha
     });
-
-    console.log({
-      newTag,
-      newTagRef
-    });
-    nextTagVersion = newTag.tag;
   }
 
   return nextTagVersion;
