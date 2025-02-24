@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Easy release call
         id: easy-release
-        uses: arthurhovhannisyan31/easy-release-action@v0.0.37
+        uses: arthurhovhannisyan31/easy-release-action@v0.0.38
         env:
           PAT: ${{ secrets.GITHUB_TOKEN }}
         with:

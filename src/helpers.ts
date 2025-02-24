@@ -1,3 +1,4 @@
+import * as github from "@actions/github";
 import { coerce, inc, type ReleaseType, type SemVer, valid } from "semver";
 
 import type { GitHub } from "@actions/github/lib/utils";
@@ -7,11 +8,13 @@ import type {
 
 export const validateBranchesMerge = async (
   octokit: InstanceType<typeof GitHub>,
-  owner: string,
-  repo: string,
   base: string,
   head: string
 ): Promise<void> => {
+  const {
+    owner,
+    repo
+  } = github.context.repo;
   const compareCommitsResponse = await octokit.rest.repos.compareCommits({
     owner,
     repo,
@@ -27,11 +30,13 @@ export const validateBranchesMerge = async (
 
 export const getNextTagVersion = async (
   octokit: InstanceType<typeof GitHub>,
-  owner: string,
-  repo: string,
   branch: RestEndpointMethodTypes["repos"]["getBranch"]["response"]["data"],
   releaseType: ReleaseType
 ): Promise<string> => {
+  const {
+    owner,
+    repo
+  } = github.context.repo;
   const {
     data: tagsList
   } = await octokit.rest.repos.listTags({
@@ -77,12 +82,19 @@ export const getNextTagVersion = async (
       type: "commit"
     });
 
+    console.log(
+      github.context,
+    );
+    console.log(branch);
+
+    const version = `v${nextTagVersion}`;
+
     const {
       data: newTag,
     } = await octokit.rest.git.createTag({
       owner,
       repo,
-      tag: `v${nextTagVersion}`,
+      tag: version,
       message: "",
       object: branch.commit.sha,
       type: "commit"
@@ -93,7 +105,7 @@ export const getNextTagVersion = async (
     } = await octokit.rest.git.createRef({
       owner,
       repo,
-      ref: `refs/heads/${branch.name}`,
+      ref: `refs/heads/${version}`,
       sha: newTag.sha
     });
 

@@ -23,20 +23,16 @@ try {
 
   const octokit = github.getOctokit(PAT);
 
-  const repo = github.context.payload.repository?.name ?? "";
-  const owner = github.context.payload.repository?.owner?.login ?? "";
-
-  if (!repo || !owner) {
-    throw new Error("Failed reading repository context");
-  }
+  const {
+    owner,
+    repo
+  } = github.context.repo;
 
   // TODO Allow to run for maintainers and admins only
   // TODO Check if admin github.context.payload.repository?.sender?.type === 'admin' | 'maintainer'
 
   await validateBranchesMerge(
     octokit,
-    owner,
-    repo,
     sourceBranchName,
     targetBranchName,
   );
@@ -64,8 +60,6 @@ try {
 
   const nextTagVersion = await getNextTagVersion(
     octokit,
-    owner,
-    repo,
     sourceBranch,
     releaseType
   );
