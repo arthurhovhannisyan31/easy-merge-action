@@ -66,6 +66,15 @@ export const getNextTagVersion = async (
       throw new Error("Failed creating new tag");
     }
 
+    console.log({
+      owner,
+      repo,
+      tag: `v${nextTagVersion}`,
+      message: "",
+      object: HEAD,
+      type: "commit"
+    });
+
     const {
       data: newTag
     } = await octokit.rest.git.createTag({
