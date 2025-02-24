@@ -15,14 +15,17 @@ import { DEFAULT_VERSION } from "./constants";
 // notification action pushes the link to created release to slack
 
 try {
-  console.log(process.env.PAT);
+  const PAT = process.env.PAT;
 
-  const pat = core.getInput("pat", { required: true });
+  if (!PAT) {
+    throw new Error("Failed reading access token");
+  }
+
   const sourceBranchName = core.getInput("source_branch", { required: true });
   const targetBranchName = core.getInput("target_branch", { required: true });
   const releaseType = core.getInput("release_type", { required: true }) as ReleaseType;
 
-  const octokit = github.getOctokit(pat);
+  const octokit = github.getOctokit(PAT);
 
   const repo = github.context.payload.repository?.name ?? "";
   const owner = github.context.payload.repository?.owner?.login ?? "";
