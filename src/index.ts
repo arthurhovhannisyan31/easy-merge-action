@@ -41,7 +41,6 @@ try {
     targetBranchName,
   );
 
-  /* Branch validation */
   const {
     data: targetBranch
   } = await octokit.rest.repos.getBranch({

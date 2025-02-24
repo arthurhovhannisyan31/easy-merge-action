@@ -51,6 +51,10 @@ export const getNextTagVersion = async (
 
   const isLatestTagAtSourceHead = HEAD === latestTag.commit.sha;
 
+  console.log({
+    isLatestTagAtSourceHead
+  });
+
   if (!isLatestTagAtSourceHead) {
     nextTagVersion = inc(coerce(latestTagVersion) as SemVer, releaseType) as string;
 
