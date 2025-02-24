@@ -1,6 +1,9 @@
 import { coerce, inc, type ReleaseType, type SemVer, valid } from "semver";
 
 import type { GitHub } from "@actions/github/lib/utils";
+import type {
+  RestEndpointMethodTypes
+} from "@octokit/plugin-rest-endpoint-methods/dist-types/generated/parameters-and-response-types";
 
 export const validateBranchesMerge = async (
   octokit: InstanceType<typeof GitHub>,
@@ -26,7 +29,7 @@ export const getNextTagVersion = async (
   octokit: InstanceType<typeof GitHub>,
   owner: string,
   repo: string,
-  HEAD: string,
+  branch: RestEndpointMethodTypes["repos"]["getBranch"]["response"]["data"],
   releaseType: ReleaseType
 ): Promise<string> => {
   const {
@@ -34,7 +37,6 @@ export const getNextTagVersion = async (
   } = await octokit.rest.repos.listTags({
     owner,
     repo,
-    HEAD
   });
   const latestTag = tagsList?.[0];
   console.log({
@@ -49,7 +51,7 @@ export const getNextTagVersion = async (
 
   let nextTagVersion = latestTagVersion;
 
-  const isLatestTagAtSourceHead = HEAD === latestTag.commit.sha;
+  const isLatestTagAtSourceHead = branch.commit.sha === latestTag.commit.sha;
 
   console.log({
     isLatestTagAtSourceHead
@@ -71,23 +73,33 @@ export const getNextTagVersion = async (
       repo,
       tag: `v${nextTagVersion}`,
       message: "",
-      object: HEAD,
+      object: branch.commit.sha,
       type: "commit"
     });
 
     const {
-      data: newTag
+      data: newTag,
     } = await octokit.rest.git.createTag({
       owner,
       repo,
       tag: `v${nextTagVersion}`,
       message: "",
-      object: HEAD,
+      object: branch.commit.sha,
       type: "commit"
     });
 
+    const {
+      data: newTagRef
+    } = await octokit.rest.git.createRef({
+      owner,
+      repo,
+      ref: `refs/heads/${branch.name}`,
+      sha: "aa218f56b14c9653891f9e74264a383fa43fefbd",
+    });
+
     console.log({
-      newTag
+      newTag,
+      newTagRef
     });
     nextTagVersion = newTag.tag;
   }

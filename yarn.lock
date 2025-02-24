@@ -388,7 +388,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/types@npm:^13.0.0, @octokit/types@npm:^13.1.0":
+"@octokit/types@npm:^13.0.0, @octokit/types@npm:^13.1.0, @octokit/types@npm:^13.8.0":
   version: 13.8.0
   resolution: "@octokit/types@npm:13.8.0"
   dependencies:
@@ -1037,6 +1037,7 @@ __metadata:
     "@actions/github": "npm:^6.0.0"
     "@eslint/compat": "npm:^1.2"
     "@eslint/js": "npm:^9.18"
+    "@octokit/types": "npm:^13.8.0"
     "@stylistic/eslint-plugin": "npm:^2.13.0"
     "@types/node": "npm:^22.13.1"
     "@types/semver": "npm:^7"

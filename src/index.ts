@@ -66,7 +66,7 @@ try {
     octokit,
     owner,
     repo,
-    sourceBranch.commit.sha,
+    sourceBranch,
     releaseType
   );
 
