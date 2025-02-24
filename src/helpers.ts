@@ -94,7 +94,7 @@ export const getNextTagVersion = async (
       owner,
       repo,
       ref: `refs/heads/${branch.name}`,
-      sha: "aa218f56b14c9653891f9e74264a383fa43fefbd",
+      sha: newTag.sha
     });
 
     console.log({
