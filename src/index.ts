@@ -1,14 +1,10 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import {
-  coerce,
-  inc,
   type ReleaseType,
-  type SemVer,
-  valid
 } from "semver";
 
-import { DEFAULT_VERSION } from "./constants";
+import { getNextTagVersion, validateBranchesMerge } from "./helpers";
 
 // merge action returns created tag value
 // release action creates a release with commits from prev to current tag
@@ -37,6 +33,14 @@ try {
   // TODO Allow to run for maintainers and admins only
   // TODO Check if admin github.context.payload.repository?.sender?.type === 'admin' | 'maintainer'
 
+  await validateBranchesMerge(
+    octokit,
+    owner,
+    repo,
+    sourceBranchName,
+    targetBranchName,
+  );
+
   /* Branch validation */
   const {
     data: targetBranch
@@ -45,6 +49,7 @@ try {
     repo,
     branch: targetBranchName
   });
+
   const {
     data: sourceBranch
   } = await octokit.rest.repos.getBranch({
@@ -58,63 +63,22 @@ try {
     sourceBranch
   });
 
-  const compareCommitsResponse = await octokit.rest.repos.compareCommits({
+  const nextTagVersion = await getNextTagVersion(
+    octokit,
     owner,
     repo,
-    base: sourceBranchName,
-    head: targetBranchName,
-  });
+    sourceBranch.commit.sha,
+    releaseType
+  );
 
-  /* Merge validation */
-  if (compareCommitsResponse.data.status !== "behind") {
-    throw new Error(`${targetBranchName} branch is not behind ${sourceBranchName}`);
-  }
-
-  // if not tag create one
-  // if tag exists exit with error: Source branch tag already exists
-
-  /* Version validation */
-  const {
-    data: tagsList
-  } = await octokit.rest.repos.listTags({
-    owner,
-    repo
-  });
-  const latestTag = tagsList?.[0];
-  console.log({
-    latestTag
-  });
-  // if no latest tag create one
-
-  const latestTagName = latestTag?.name;
-
-  if (!valid(latestTagName)) {
-    throw new Error("Latest tag version is not valid, check git tags");
-  }
-
-  const nextTag = inc(coerce(latestTagName) as SemVer, releaseType);
-
-  if (!nextTag) {
-    throw new Error("Failed creating new tag");
-  }
-
-  console.log({
-    nextTag
-  });
-
-  // if (latestTag.commit.sha === sourceBranch.commit.sha) {
-  //   throw new Error(`Source branch already has a tag`);
-  // }
-  // get tag for a commit sha
-  //
-  console.log(compareCommitsResponse);
-
-  // merge
-  // create release
-  // post message to slack
+  // merge branches
+  // dev -> master, master -> dev
 
   // at last
-  core.setOutput("released_tag", nextTag);
+  core.setOutput("released_tag", nextTagVersion);
+
+  // create release - separate action
+  // post message to slack - separate action
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }
