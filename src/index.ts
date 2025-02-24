@@ -10,11 +10,17 @@ import {
 
 import { DEFAULT_VERSION } from "./constants";
 
+// merge action returns created tag value
+// release action creates a release with commits from prev to current tag
+// notification action pushes the link to created release to slack
+
 try {
-  const pat = core.getInput("pat");
-  const sourceBranchName = core.getInput("source_branch");
-  const targetBranchName = core.getInput("target_branch");
-  const releaseType = core.getInput("release_type") as ReleaseType;
+  console.log(process.env.PAT);
+
+  const pat = core.getInput("pat", { required: true });
+  const sourceBranchName = core.getInput("source_branch", { required: true });
+  const targetBranchName = core.getInput("target_branch", { required: true });
+  const releaseType = core.getInput("release_type", { required: true }) as ReleaseType;
 
   const octokit = github.getOctokit(pat);
 
