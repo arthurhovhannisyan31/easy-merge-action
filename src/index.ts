@@ -67,6 +67,7 @@ try {
   // merge branches
   // dev -> master, master -> dev
   //
+  //
   // at last
   core.setOutput("released_tag", nextTagVersion);
 
