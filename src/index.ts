@@ -2,96 +2,86 @@ import * as core from "@actions/core";
 import * as exec from "@actions/exec";
 import * as github from "@actions/github";
 import {
-  coerce,
-  inc,
   type ReleaseType,
-  type SemVer,
-  valid
 } from "semver";
 
-import { DEFAULT_VERSION } from "./constants";
+import { getNextTagVersion, validateBranchesMerge } from "./helpers";
+
+// merge action returns created tag value
+// release action creates a release with commits from prev to current tag
+// notification action pushes the link to created release to slack
 
 try {
-  const pat = core.getInput("pat");
-  const sourceBranch = core.getInput("source_branch");
-  const targetBranch = core.getInput("target_branch");
-  const releaseType = core.getInput("release_type") as ReleaseType;
+  const PAT = process.env.PAT;
 
-  const octokit = github.getOctokit(pat);
-
-  const repo = github.context.payload.repository?.name ?? "";
-  const owner = github.context.payload.repository?.owner?.login ?? "";
-
-  if (!repo || !owner) {
-    core.setFailed("Failed reading repository context");
+  if (!PAT) {
+    throw new Error("Failed reading access token");
   }
 
-  // TODO Allow to run for maintainers and admins only
-  // TODO Check if admin github.context.payload.repository?.sender?.type === 'admin' | 'maintainer'
+  const sourceBranchName = core.getInput("source_branch", { required: true });
+  const targetBranchName = core.getInput("target_branch", { required: true });
+  const releaseType = core.getInput("release_type", { required: true }) as ReleaseType;
 
-  /* Version validation */
+  const octokit = github.getOctokit(PAT);
+
   const {
-    data: tagsList
-  } = await octokit.rest.repos.listTags({
     owner,
     repo
-  });
-  const latestTag = tagsList?.[0];
-  const latestVersion = latestTag?.name ?? DEFAULT_VERSION;
+  } = github.context.repo;
 
-  if (!valid(latestVersion)) {
-    core.setFailed("Latest tag version is not valid, check git tags");
-  }
-
-  const nextVersion = inc(coerce(latestVersion) as SemVer, releaseType);
-
-  console.log({
-    nextVersion
-  });
-
-  /* Branch validation */
-  const {
-    data: targetBranchData
-  } = await octokit.rest.repos.getBranch({
-    owner,
-    repo,
-    branch: targetBranch
-  });
-  const {
-    data: sourceBranchData
-  } = await octokit.rest.repos.getBranch({
-    owner,
-    repo,
-    branch: sourceBranch
-  });
-
-  // git merge-base
-  // TODO check branches HEADs are not the same
-  // TODO check source branch HEAD is ahead of target branch HEAD
-  // TODO check source branch HEAD does not have tag
-
-  console.log({
-    targetBranchData,
-    sourceBranchData
-  });
-  const compareCommitsResponse = await octokit.rest.repos.compareCommits({
-    owner,
-    repo,
-    base: sourceBranch,
-    head: targetBranch,
-  });
-
-  /* Merge validation */
-  if (compareCommitsResponse.data.status !== "behind") {
-    core.setFailed(`${targetBranch} branch is not behind ${sourceBranch}`);
-    await exec.exec("bash", ["exit", "1"]);
-  }
-
-  console.log("should exit");
-
-  // get tag for a commit sha
+  // TODO extract to helper
+  // const senderType = github.context.payload.sender?.type ?? "User";
   //
-  console.log(compareCommitsResponse);
+  // if (!["maintainer", "admin"].includes(senderType)) {
+  //   throw new Error("Forbidden: No sufficient rights to call this action");
+  // }
+
+  await validateBranchesMerge(
+    octokit,
+    targetBranchName,
+    sourceBranchName,
+  );
+
+  const {
+    data: targetBranch
+  } = await octokit.rest.repos.getBranch({
+    owner,
+    repo,
+    branch: targetBranchName
+  });
+
+  const {
+    data: sourceBranch
+  } = await octokit.rest.repos.getBranch({
+    owner,
+    repo,
+    branch: sourceBranchName
+  });
+
+  const nextTagVersion = await getNextTagVersion(
+    octokit,
+    sourceBranch,
+    releaseType
+  );
+
+  core.setOutput("released_tag", nextTagVersion);
+
+  await octokit.rest.repos.merge({
+    owner,
+    repo,
+    base: targetBranchName,
+    head: sourceBranchName,
+    commit_message: `Release ${nextTagVersion}`
+  });
+
+  // no exising api for --no-ff merge
+  await exec.exec("git", ["checkout develop"]);
+  await exec.exec("git", ["pull"]);
+  await exec.exec("git", ["br"]);
+  // await exec.exec("git", ["merge "]);
+
+  // create release - separate action
+  // post message to slack - separate action
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }

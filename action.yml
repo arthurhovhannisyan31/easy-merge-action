@@ -18,10 +18,9 @@ inputs:
       - major
       - minor
       - patch
-  pat:
-    description: "Personal access token"
-    required: true
-# secrets: inherit
+outputs:
+  released_tag:
+    description: "Released version tag value v#.#.#"
 runs:
   using: "node20"
   main: "dist/index.js"
