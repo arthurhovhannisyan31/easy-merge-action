@@ -1,4 +1,5 @@
 import * as core from "@actions/core";
+import * as exec from "@actions/exec";
 import * as github from "@actions/github";
 import {
   type ReleaseType,
@@ -28,13 +29,17 @@ try {
     repo
   } = github.context.repo;
 
-  // TODO Allow to run for maintainers and admins only
-  // TODO Check if admin github.context.payload.repository?.sender?.type === 'admin' | 'maintainer'
+  // TODO extract to helper
+  // const senderType = github.context.payload.sender?.type ?? "User";
+  //
+  // if (!["maintainer", "admin"].includes(senderType)) {
+  //   throw new Error("Forbidden: No sufficient rights to call this action");
+  // }
 
   await validateBranchesMerge(
     octokit,
-    sourceBranchName,
     targetBranchName,
+    sourceBranchName,
   );
 
   const {
@@ -53,22 +58,27 @@ try {
     branch: sourceBranchName
   });
 
-  console.log({
-    targetBranch,
-    sourceBranch
-  });
-
   const nextTagVersion = await getNextTagVersion(
     octokit,
     sourceBranch,
     releaseType
   );
 
-  // merge branches
-  // dev -> master, master -> dev
-
-  // at last
   core.setOutput("released_tag", nextTagVersion);
+
+  await octokit.rest.repos.merge({
+    owner,
+    repo,
+    base: targetBranchName,
+    head: sourceBranchName,
+    commit_message: `Release ${nextTagVersion}`
+  });
+
+  // no exising api for --no-ff merge
+  await exec.exec("git", ["checkout develop"]);
+  await exec.exec("git", ["pull"]);
+  await exec.exec("git", ["br"]);
+  // await exec.exec("git", ["merge "]);
 
   // create release - separate action
   // post message to slack - separate action

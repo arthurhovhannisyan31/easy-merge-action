@@ -15,7 +15,9 @@ export const validateBranchesMerge = async (
     owner,
     repo
   } = github.context.repo;
-  const compareCommitsResponse = await octokit.rest.repos.compareCommits({
+  const {
+    data: compareCommits
+  } = await octokit.rest.repos.compareCommits({
     owner,
     repo,
     base,
@@ -23,8 +25,11 @@ export const validateBranchesMerge = async (
   });
 
   /* Merge validation */
-  if (compareCommitsResponse.data.status !== "behind") {
-    throw new Error(`${base} branch is not behind ${head}`);
+  if (compareCommits.status !== "ahead") {
+    throw new Error(
+      // eslint-disable-next-line max-len
+      `The '${head}' branch is not ahead of '${base}' branch. \n Rebase the '${head}' branch first and check merge-conflicts.`
+    );
   }
 };
 
