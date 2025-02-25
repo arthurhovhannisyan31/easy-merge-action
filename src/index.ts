@@ -77,8 +77,7 @@ try {
   // no exising api for --no-ff merge
   await exec.exec("git", ["checkout", sourceBranchName]);
   await exec.exec("git", ["pull"]);
-  await exec.exec("git", ["br"]);
-  // await exec.exec("git", ["merge "]);
+  await exec.exec("git", ["merge", targetBranchName, "--ff"]);
 
   // create release - separate action
   // post message to slack - separate action
