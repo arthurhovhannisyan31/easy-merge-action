@@ -77,13 +77,15 @@ try {
   // no exising api for --no-ff merge
   await exec.exec("git", ["fetch"]);
   await exec.exec("git", ["branch"]);
-  await exec.exec("git", ["branch", "-r"]);
   await exec.exec("git", ["checkout", targetBranchName]);
+  await exec.exec("git", ["branch"]);
   // await exec.exec("git", ["pull"]);
   // await exec.exec("git", ["checkout", sourceBranchName]);
   // await exec.exec("git", ["pull"]);
   // await exec.exec("git", ["merge", targetBranchName, "--ff"]);
   // await exec.exec("git", ["push", "origin", "-f"]);
+
+  // try to rebase existing PRs
 
   // create release - separate action
   // post message to slack - separate action
