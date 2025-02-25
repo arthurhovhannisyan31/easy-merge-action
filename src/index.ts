@@ -75,12 +75,13 @@ try {
   });
 
   // no exising api for --no-ff merge
-  await exec.exec("git", ["checkout", targetBranchName]);
-  await exec.exec("git", ["pull"]);
-  await exec.exec("git", ["checkout", sourceBranchName]);
-  await exec.exec("git", ["pull"]);
-  await exec.exec("git", ["merge", targetBranchName, "--ff"]);
-  await exec.exec("git", ["push", "origin", "-f"]);
+  await exec.exec("git", ["branch"]);
+  // await exec.exec("git", ["checkout", targetBranchName]);
+  // await exec.exec("git", ["pull"]);
+  // await exec.exec("git", ["checkout", sourceBranchName]);
+  // await exec.exec("git", ["pull"]);
+  // await exec.exec("git", ["merge", targetBranchName, "--ff"]);
+  // await exec.exec("git", ["push", "origin", "-f"]);
 
   // create release - separate action
   // post message to slack - separate action
