@@ -78,7 +78,7 @@ try {
   await exec.exec("git", ["fetch"]);
   await exec.exec("git", ["branch"]);
   await exec.exec("git", ["branch", "-r"]);
-  await exec.exec("git", ["checkout", `origin/${targetBranchName}`]);
+  await exec.exec("git", ["checkout", targetBranchName]);
   // await exec.exec("git", ["pull"]);
   // await exec.exec("git", ["checkout", sourceBranchName]);
   // await exec.exec("git", ["pull"]);
