@@ -6,7 +6,7 @@ import {
 
 import {
   createTag,
-  getLatestTagNames,
+  getTagsData,
   syncBranches,
   validateBranchesMerge
 } from "./helpers";
@@ -44,7 +44,7 @@ try {
     sourceBranchName,
   );
 
-  const [previousTagName, tagName] = await getLatestTagNames(
+  const [previousTag, tagName] = await getTagsData(
     octokit,
     releaseType
   );
@@ -74,6 +74,8 @@ try {
   });
 
   console.log(commits);
+  console.log(previousTag.commit.sha);
+  console.log(mergeCommit.sha);
 
   await syncBranches(
     targetBranchName,

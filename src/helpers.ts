@@ -3,6 +3,10 @@ import * as github from "@actions/github";
 import { coerce, inc, type ReleaseType, type SemVer, valid } from "semver";
 
 import type { GitHub } from "@actions/github/lib/utils";
+import type { components } from "@octokit/openapi-types";
+
+type GitTag = components["schemas"]["git-tag"];
+type Tag = components["schemas"]["tag"];
 
 export const validateBranchesMerge = async (
   octokit: InstanceType<typeof GitHub>,
@@ -29,10 +33,10 @@ export const validateBranchesMerge = async (
   }
 };
 
-export const getLatestTagNames = async (
+export const getTagsData = async (
   octokit: InstanceType<typeof GitHub>,
   releaseType: ReleaseType
-): Promise<[string, string]> => {
+): Promise<[Tag, string]> => {
   const {
     owner,
     repo
@@ -57,14 +61,14 @@ export const getLatestTagNames = async (
     throw new Error("Failed creating new tag");
   }
 
-  return [latestTagName, `v${nextTagName}`];
+  return [latestTag, `v${nextTagName}`];
 };
 
 export const createTag = async (
   octokit: InstanceType<typeof GitHub>,
   tag: string,
   commitSha: string
-): Promise<void> => {
+): Promise<GitTag> => {
   const {
     owner,
     repo
@@ -87,6 +91,8 @@ export const createTag = async (
     ref: `refs/tags/${tag}`,
     sha: newTag.sha
   });
+
+  return newTag;
 };
 
 export const syncBranches = async (
