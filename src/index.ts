@@ -78,9 +78,9 @@ try {
     sha: sourceBranchName
   });
 
-  console.log(mergeCommit);
-  console.log(previousTag);
-  // console.log(commits[0]);
+  // console.log(mergeCommit);
+  // console.log(previousTag);
+  console.log(commits[0]);
   const previousTagIndex = commits.findIndex(({
     sha
   }) => sha === previousTag.commit.sha);
@@ -88,7 +88,15 @@ try {
     throw new Error("Failed creating release. add more details");
   }
   /* Filter out edge merge commits */
-  const filteredCommits = commits.slice(1, previousTagIndex - 1);
+  const filteredCommits = commits.slice(1, previousTagIndex - 1).map(({
+    commit: {
+      message,
+      author
+    },
+  }) => ({
+    message,
+    author
+  }));
 
   console.log(filteredCommits);
 
