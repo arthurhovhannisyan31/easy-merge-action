@@ -73,9 +73,10 @@ try {
     sha: sourceBranchName
   });
 
-  console.log(previousTag.commit.sha);
-  console.log(mergeCommit.sha);
-  console.log(commits);
+  console.log(previousTag);
+  console.log(mergeCommit);
+  console.log(commits[0]);
+  console.log(commits.map(({ sha }) => sha));
 
   await syncBranches(
     targetBranchName,
