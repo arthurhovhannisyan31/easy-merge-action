@@ -6,7 +6,7 @@ import {
 
 import {
   createTag,
-  getNextTagVersion,
+  getLatestTagNames,
   syncBranches,
   validateBranchesMerge
 } from "./helpers";
@@ -44,7 +44,7 @@ try {
     sourceBranchName,
   );
 
-  const tagName = await getNextTagVersion(
+  const [previousTagName, tagName] = await getLatestTagNames(
     octokit,
     releaseType
   );
@@ -65,7 +65,15 @@ try {
     mergeCommit.sha
   );
 
-  core.setOutput("released_tag", tagName);
+  const {
+    data: commits
+  } = await octokit.rest.repos.listCommits({
+    owner,
+    repo,
+    sha: sourceBranchName
+  });
+
+  console.log(commits);
 
   await syncBranches(
     targetBranchName,
@@ -73,6 +81,7 @@ try {
   );
 
   /* create a release */
+
   const {
     data: releaseNotes
   } = await octokit.rest.repos.generateReleaseNotes({
@@ -80,7 +89,6 @@ try {
     repo,
     tag_name: tagName,
   });
-
   const {
     data: release
   } = await octokit.rest.repos.createRelease({
@@ -91,6 +99,7 @@ try {
     body: releaseNotes.body
   });
 
+  core.setOutput("released_tag", tagName);
   core.setOutput("release_url", release.html_url);
 
   // post message to slack - separate action
