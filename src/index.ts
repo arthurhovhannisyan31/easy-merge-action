@@ -5,6 +5,7 @@ import {
 } from "semver";
 
 import {
+  createRelease,
   createTag,
   getTagsData,
   syncBranches,
@@ -70,48 +71,12 @@ try {
     sourceBranchName
   );
 
-  const {
-    data: commits
-  } = await octokit.rest.repos.listCommits({
-    owner,
-    repo,
-    sha: sourceBranchName
-  });
-
-  const previousTagIndex = commits.findIndex(({
-    sha
-  }) => sha === previousTag.commit.sha);
-  if (!Number.isFinite(previousTagIndex)) {
-    throw new Error("Failed creating release. add more details");
-  }
-  /* Filter out edge merge commits */
-  const filteredCommits = commits.slice(1, previousTagIndex);
-
-  const commitsNotes = filteredCommits.map(({
-    commit,
-    author
-  }) => `${author?.login} ${commit.message}`).join("\n");
-
-  console.log(commitsNotes);
-
-  /* create a release */
-
-  const {
-    data: releaseNotes
-  } = await octokit.rest.repos.generateReleaseNotes({
-    owner,
-    repo,
-    tag_name: tagName,
-  });
-  const {
-    data: release
-  } = await octokit.rest.repos.createRelease({
-    owner,
-    repo,
-    tag_name: tagName,
-    name: `Release ${releaseNotes.name}`,
-    body: `${commitsNotes}\n\n${releaseNotes.body}`
-  });
+  const release = await createRelease(
+    octokit,
+    sourceBranchName,
+    previousTag,
+    tagName
+  );
 
   core.setOutput("release_tag", tagName);
   core.setOutput("release_url", release.html_url);
