@@ -78,9 +78,6 @@ try {
     sha: sourceBranchName
   });
 
-  // console.log(mergeCommit);
-  // console.log(previousTag);
-  console.log(commits[0]);
   const previousTagIndex = commits.findIndex(({
     sha
   }) => sha === previousTag.commit.sha);
