@@ -81,7 +81,7 @@ try {
     tag_name: tagName,
   });
 
-  console.log(releaseNotes);
+  console.log({ releaseNotes });
 
   const {
     data: release
@@ -91,7 +91,7 @@ try {
     tag_name: tagName,
   });
 
-  console.log(release);
+  console.log({ release });
 
   const {
     data: updateRelease
@@ -103,7 +103,7 @@ try {
     body: "body"
   });
 
-  console.log(updateRelease);
+  console.log({ updateRelease });
 
   // post message to slack - separate action
 } catch (error: unknown) {
