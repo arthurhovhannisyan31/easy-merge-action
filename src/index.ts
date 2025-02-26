@@ -109,7 +109,7 @@ try {
     owner,
     repo,
     tag_name: tagName,
-    name: releaseNotes.name,
+    name: `Release ${releaseNotes.name}`,
     body: `${commitsNotes}\n\n${releaseNotes.body}`
   });
 
