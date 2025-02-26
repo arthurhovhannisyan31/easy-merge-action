@@ -98,3 +98,4 @@ try {
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }
+//
