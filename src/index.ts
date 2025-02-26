@@ -89,12 +89,21 @@ try {
     owner,
     repo,
     tag_name: tagName,
-    name: "releaseNotes.name",
-    body: "releaseNotes.body"
-    // generate_release_notes: true
   });
 
   console.log(release);
+
+  const {
+    data: updateRelease
+  } = await octokit.rest.repos.updateRelease({
+    owner,
+    repo,
+    release_id: release.id,
+    name: "name",
+    body: "body"
+  });
+
+  console.log(updateRelease);
 
   // post message to slack - separate action
 } catch (error: unknown) {
