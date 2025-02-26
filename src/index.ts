@@ -89,7 +89,9 @@ try {
     owner,
     repo,
     tag_name: tagName,
-    releaseNotes
+    name: releaseNotes.name,
+    body: releaseNotes.body
+    // generate_release_notes: true
   });
 
   console.log(release);
