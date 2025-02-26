@@ -83,21 +83,18 @@ try {
 
   console.log(releaseNotes);
 
-  // const {
-  //   data: release
-  // } = await octokit.rest.repos.createRelease({
-  //   owner,
-  //   repo,
-  //   tag_name: tagName,
-  //   releaseNotes
-  // });
-  //
-  // console.log(release);
+  const {
+    data: release
+  } = await octokit.rest.repos.createRelease({
+    owner,
+    repo,
+    tag_name: tagName,
+    releaseNotes
+  });
+
+  console.log(release);
 
   // post message to slack - separate action
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }
-//
-//
-//
