@@ -78,9 +78,6 @@ try {
     sha: sourceBranchName
   });
 
-  // console.log(mergeCommit);
-  // console.log(previousTag);
-  console.log(commits[0]);
   const previousTagIndex = commits.findIndex(({
     sha
   }) => sha === previousTag.commit.sha);
@@ -93,8 +90,7 @@ try {
   const commitsNotes = filteredCommits.map(({
     commit,
     author
-  }) => `${author?.login} ${commit.message}
-  `).join("\n");
+  }) => `${author?.login} ${commit.message}`).join("\n");
 
   console.log(commitsNotes);
 
@@ -114,6 +110,7 @@ try {
     repo,
     tag_name: tagName,
     name: releaseNotes.name,
+    body: `${commitsNotes}\n\n${releaseNotes.body}`
   });
 
   core.setOutput("released_tag", tagName);
