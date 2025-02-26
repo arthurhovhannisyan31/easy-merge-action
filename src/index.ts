@@ -88,16 +88,15 @@ try {
     throw new Error("Failed creating release. add more details");
   }
   /* Filter out edge merge commits */
-  const filteredCommits = commits.slice(1, previousTagIndex).map(({
-    commit,
-    author,
+  const filteredCommits = commits.slice(1, previousTagIndex);
 
-  }) => ({
+  const commitsNotes = filteredCommits.map(({
     commit,
     author
-  }));
+  }) => `${author?.login} ${commit.message}
+  `).join("\n");
 
-  console.log(filteredCommits);
+  console.log(commitsNotes);
 
   /* create a release */
 
