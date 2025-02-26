@@ -7,10 +7,6 @@ import {
 
 import { getNextTagVersion, validateBranchesMerge } from "./helpers";
 
-// merge action returns created tag value
-// release action creates a release with commits from prev to current tag
-// notification action pushes the link to created release to slack
-
 try {
   const PAT = process.env.PAT;
 
@@ -41,14 +37,6 @@ try {
     targetBranchName,
     sourceBranchName,
   );
-
-  const {
-    data: targetBranch
-  } = await octokit.rest.repos.getBranch({
-    owner,
-    repo,
-    branch: targetBranchName
-  });
 
   const {
     data: sourceBranch
@@ -82,7 +70,7 @@ try {
   await exec.exec("git", ["merge", targetBranchName, "--ff"]);
   await exec.exec("git", ["push", "origin", "-f"]);
 
-  // try to rebase existing PRs
+  // TODO try to rebase existing PRs
 
   // create release - separate action
   // post message to slack - separate action
