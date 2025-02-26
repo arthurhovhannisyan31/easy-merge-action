@@ -21,6 +21,8 @@ inputs:
 outputs:
   released_tag:
     description: "Released version tag value v#.#.#"
+  released_url:
+    description: "Link to release HTML"
 runs:
   using: "node20"
   main: "dist/index.js"
