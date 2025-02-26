@@ -65,6 +65,11 @@ try {
     mergeCommit.sha
   );
 
+  await syncBranches(
+    targetBranchName,
+    sourceBranchName
+  );
+
   const {
     data: commits
   } = await octokit.rest.repos.listCommits({
@@ -73,15 +78,10 @@ try {
     sha: sourceBranchName
   });
 
-  console.log(previousTag);
   console.log(mergeCommit);
-  console.log(commits[0]);
+  console.log(previousTag);
+  // console.log(commits[0]);
   console.log(commits.map(({ sha }) => sha));
-
-  await syncBranches(
-    targetBranchName,
-    sourceBranchName
-  );
 
   /* create a release */
 
@@ -99,7 +99,6 @@ try {
     repo,
     tag_name: tagName,
     name: releaseNotes.name,
-    body: releaseNotes.body
   });
 
   core.setOutput("released_tag", tagName);
