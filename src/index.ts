@@ -81,8 +81,6 @@ try {
     tag_name: tagName,
   });
 
-  console.log({ releaseNotes });
-
   const {
     data: release
   } = await octokit.rest.repos.createRelease({
@@ -93,19 +91,7 @@ try {
     body: releaseNotes.body
   });
 
-  console.log({ release });
-
-  const {
-    data: updateRelease
-  } = await octokit.rest.repos.updateRelease({
-    owner,
-    repo,
-    release_id: release.id,
-    name: "name",
-    body: "body"
-  });
-
-  console.log({ updateRelease });
+  core.setOutput("release_url", release.html_url);
 
   // post message to slack - separate action
 } catch (error: unknown) {
