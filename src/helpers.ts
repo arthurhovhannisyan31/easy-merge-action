@@ -109,6 +109,39 @@ export const syncBranches = async (
   await exec.exec("git", ["push", "origin", "-f", "-q"]);
 };
 
+export const processMerge = async (
+  octokit: InstanceType<typeof GitHub>,
+  base: string,
+  head: string,
+  tagName: string
+): Promise<void> => {
+  const {
+    owner,
+    repo
+  } = github.context.repo;
+
+  const {
+    data: mergeCommit
+  } = await octokit.rest.repos.merge({
+    owner,
+    repo,
+    base,
+    head,
+    commit_message: `Release ${tagName}`
+  });
+
+  await createTag(
+    octokit,
+    tagName,
+    mergeCommit.sha
+  );
+
+  await syncBranches(
+    base,
+    head
+  );
+};
+
 export const createRelease = async (
   octokit: InstanceType<typeof GitHub>,
   sourceBranchName: string,
