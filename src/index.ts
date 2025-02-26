@@ -5,7 +5,7 @@ import {
   type ReleaseType,
 } from "semver";
 
-import { getNextTagVersion, validateBranchesMerge } from "./helpers";
+import { getTagVersions, validateBranchesMerge } from "./helpers";
 
 try {
   const PAT = process.env.PAT;
@@ -24,6 +24,8 @@ try {
     owner,
     repo
   } = github.context.repo;
+
+  console.log(github.context.payload.sender);
 
   // TODO extract to helper
   // const senderType = github.context.payload.sender?.type ?? "User";
@@ -46,20 +48,20 @@ try {
     branch: sourceBranchName
   });
 
-  const nextTagVersion = await getNextTagVersion(
+  const tagName = await getTagVersions(
     octokit,
     sourceBranch,
     releaseType
   );
 
-  core.setOutput("released_tag", nextTagVersion);
+  core.setOutput("released_tag", tagName);
 
   await octokit.rest.repos.merge({
     owner,
     repo,
     base: targetBranchName,
     head: sourceBranchName,
-    commit_message: `Release ${nextTagVersion}`
+    commit_message: `Release ${tagName}`
   });
 
   // no exising api for --no-ff merge
@@ -72,7 +74,28 @@ try {
 
   // TODO try to rebase existing PRs
 
-  // create release - separate action
+  /* create a release */
+  const {
+    data: releaseNotes
+  } = await octokit.rest.repos.generateReleaseNotes({
+    owner,
+    repo,
+    tag_name: tagName,
+  });
+
+  console.log(releaseNotes);
+
+  // const {
+  //   data: release
+  // } = await octokit.rest.repos.createRelease({
+  //   owner,
+  //   repo,
+  //   tag_name: tagName,
+  //   releaseNotes
+  // });
+  //
+  // console.log(release);
+
   // post message to slack - separate action
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
