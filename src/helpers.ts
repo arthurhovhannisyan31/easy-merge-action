@@ -29,10 +29,10 @@ export const validateBranchesMerge = async (
   }
 };
 
-export const getNextTagVersion = async (
+export const getLatestTagNames = async (
   octokit: InstanceType<typeof GitHub>,
   releaseType: ReleaseType
-): Promise<string> => {
+): Promise<[string, string]> => {
   const {
     owner,
     repo
@@ -57,7 +57,7 @@ export const getNextTagVersion = async (
     throw new Error("Failed creating new tag");
   }
 
-  return `v${nextTagName}`;
+  return [latestTagName, `v${nextTagName}`];
 };
 
 export const createTag = async (
