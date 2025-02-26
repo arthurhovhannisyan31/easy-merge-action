@@ -6,9 +6,7 @@ import {
 
 import {
   createRelease,
-  createTag,
-  getTagsData,
-  syncBranches,
+  getTagsData, processMerge,
   validateBranchesMerge
 } from "./helpers";
 
@@ -24,11 +22,6 @@ try {
   const releaseType = core.getInput("release_type", { required: true }) as ReleaseType;
 
   const octokit = github.getOctokit(PAT);
-
-  const {
-    owner,
-    repo
-  } = github.context.repo;
 
   console.log(github.context.payload.sender);
 
@@ -50,25 +43,11 @@ try {
     releaseType
   );
 
-  const {
-    data: mergeCommit
-  } = await octokit.rest.repos.merge({
-    owner,
-    repo,
-    base: targetBranchName,
-    head: sourceBranchName,
-    commit_message: `Release ${tagName}`
-  });
-
-  await createTag(
+  await processMerge(
     octokit,
-    tagName,
-    mergeCommit.sha
-  );
-
-  await syncBranches(
     targetBranchName,
-    sourceBranchName
+    sourceBranchName,
+    tagName
   );
 
   const release = await createRelease(
