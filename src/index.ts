@@ -1,11 +1,15 @@
 import * as core from "@actions/core";
-import * as exec from "@actions/exec";
 import * as github from "@actions/github";
 import {
   type ReleaseType,
 } from "semver";
 
-import { getTagVersions, validateBranchesMerge } from "./helpers";
+import {
+  createTag,
+  getNextTagVersion,
+  syncBranches,
+  validateBranchesMerge
+} from "./helpers";
 
 try {
   const PAT = process.env.PAT;
@@ -40,23 +44,14 @@ try {
     sourceBranchName,
   );
 
-  const {
-    data: sourceBranch
-  } = await octokit.rest.repos.getBranch({
-    owner,
-    repo,
-    branch: sourceBranchName
-  });
-
-  const tagName = await getTagVersions(
+  const tagName = await getNextTagVersion(
     octokit,
-    sourceBranch,
     releaseType
   );
 
-  core.setOutput("released_tag", tagName);
-
-  await octokit.rest.repos.merge({
+  const {
+    data: mergeCommit
+  } = await octokit.rest.repos.merge({
     owner,
     repo,
     base: targetBranchName,
@@ -64,15 +59,18 @@ try {
     commit_message: `Release ${tagName}`
   });
 
-  // no exising api for --no-ff merge
-  await exec.exec("git", ["fetch", "-q"]);
-  // need to populate targetBranch in local context
-  await exec.exec("git", ["checkout", targetBranchName, "-q"]);
-  await exec.exec("git", ["checkout", sourceBranchName, "-q"]);
-  await exec.exec("git", ["merge", targetBranchName, "--ff", "-q"]);
-  await exec.exec("git", ["push", "origin", "-f", "-q"]);
+  await createTag(
+    octokit,
+    tagName,
+    mergeCommit.sha
+  );
 
-  // TODO try to rebase existing PRs
+  core.setOutput("released_tag", tagName);
+
+  await syncBranches(
+    targetBranchName,
+    sourceBranchName
+  );
 
   /* create a release */
   const {

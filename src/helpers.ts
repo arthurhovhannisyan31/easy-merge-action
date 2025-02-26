@@ -1,10 +1,8 @@
+import * as exec from "@actions/exec";
 import * as github from "@actions/github";
 import { coerce, inc, type ReleaseType, type SemVer, valid } from "semver";
 
 import type { GitHub } from "@actions/github/lib/utils";
-import type {
-  RestEndpointMethodTypes
-} from "@octokit/plugin-rest-endpoint-methods/dist-types/generated/parameters-and-response-types";
 
 export const validateBranchesMerge = async (
   octokit: InstanceType<typeof GitHub>,
@@ -24,18 +22,15 @@ export const validateBranchesMerge = async (
     head,
   });
 
-  /* Merge validation */
   if (compareCommits.status !== "ahead") {
     throw new Error(
-      // eslint-disable-next-line max-len
-      `The '${head}' branch is not ahead of '${base}' branch. \n Rebase the '${head}' branch first and check merge-conflicts.`
+      `The '${head}' branch is not ahead of '${base}' branch. Rebase the '${head}' branch first.`
     );
   }
 };
 
-export const getTagVersions = async (
+export const getNextTagVersion = async (
   octokit: InstanceType<typeof GitHub>,
-  branch: RestEndpointMethodTypes["repos"]["getBranch"]["response"]["data"],
   releaseType: ReleaseType
 ): Promise<string> => {
   const {
@@ -52,41 +47,57 @@ export const getTagVersions = async (
 
   const latestTagName = latestTag?.name;
 
-  if (!valid(latestTagName)) {
+  if (!latestTagName || !valid(latestTagName)) {
     throw new Error("Latest tag version is not valid, check git tags");
   }
 
-  let nextTagName = latestTagName;
+  const nextTagName = inc(coerce(latestTagName) as SemVer, releaseType) as string;
 
-  const isLatestTagAtSourceHead = branch.commit.sha === latestTag.commit.sha;
-
-  if (!isLatestTagAtSourceHead) {
-    nextTagName = inc(coerce(latestTagName) as SemVer, releaseType) as string;
-
-    if (!nextTagName) {
-      throw new Error("Failed creating new tag");
-    }
-
-    nextTagName = `v${nextTagName}`;
-
-    const {
-      data: newTag,
-    } = await octokit.rest.git.createTag({
-      owner,
-      repo,
-      tag: nextTagName,
-      message: "",
-      object: branch.commit.sha,
-      type: "commit"
-    });
-
-    await octokit.rest.git.createRef({
-      owner,
-      repo,
-      ref: `refs/tags/${nextTagName}`,
-      sha: newTag.sha
-    });
+  if (!nextTagName) {
+    throw new Error("Failed creating new tag");
   }
 
-  return nextTagName;
+  return `v${nextTagName}`;
+};
+
+export const createTag = async (
+  octokit: InstanceType<typeof GitHub>,
+  tag: string,
+  commitSha: string
+): Promise<void> => {
+  const {
+    owner,
+    repo
+  } = github.context.repo;
+
+  const {
+    data: newTag,
+  } = await octokit.rest.git.createTag({
+    owner,
+    repo,
+    tag,
+    message: "",
+    object: commitSha,
+    type: "commit"
+  });
+
+  await octokit.rest.git.createRef({
+    owner,
+    repo,
+    ref: `refs/tags/${tag}`,
+    sha: newTag.sha
+  });
+};
+
+export const syncBranches = async (
+  base: string,
+  head: string
+): Promise<void> => {
+  // no exising api for --no-ff merge
+  await exec.exec("git", ["fetch", "-q"]);
+  // need to populate targetBranch in local context
+  await exec.exec("git", ["checkout", base, "-q"]);
+  await exec.exec("git", ["checkout", head, "-q"]);
+  await exec.exec("git", ["merge", base, "--ff", "-q"]);
+  await exec.exec("git", ["push", "origin", "-f", "-q"]);
 };
