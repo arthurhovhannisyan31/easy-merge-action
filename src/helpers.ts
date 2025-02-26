@@ -33,7 +33,7 @@ export const validateBranchesMerge = async (
   }
 };
 
-export const getNextTagVersion = async (
+export const getTagVersions = async (
   octokit: InstanceType<typeof GitHub>,
   branch: RestEndpointMethodTypes["repos"]["getBranch"]["response"]["data"],
   releaseType: ReleaseType
@@ -50,31 +50,31 @@ export const getNextTagVersion = async (
   });
   const latestTag = tagsList?.[0];
 
-  const latestTagVersion = latestTag?.name;
+  const latestTagName = latestTag?.name;
 
-  if (!valid(latestTagVersion)) {
+  if (!valid(latestTagName)) {
     throw new Error("Latest tag version is not valid, check git tags");
   }
 
-  let nextTagVersion = latestTagVersion;
+  let nextTagName = latestTagName;
 
   const isLatestTagAtSourceHead = branch.commit.sha === latestTag.commit.sha;
 
   if (!isLatestTagAtSourceHead) {
-    nextTagVersion = inc(coerce(latestTagVersion) as SemVer, releaseType) as string;
+    nextTagName = inc(coerce(latestTagName) as SemVer, releaseType) as string;
 
-    if (!nextTagVersion) {
+    if (!nextTagName) {
       throw new Error("Failed creating new tag");
     }
 
-    nextTagVersion = `v${nextTagVersion}`;
+    nextTagName = `v${nextTagName}`;
 
     const {
       data: newTag,
     } = await octokit.rest.git.createTag({
       owner,
       repo,
-      tag: nextTagVersion,
+      tag: nextTagName,
       message: "",
       object: branch.commit.sha,
       type: "commit"
@@ -83,10 +83,10 @@ export const getNextTagVersion = async (
     await octokit.rest.git.createRef({
       owner,
       repo,
-      ref: `refs/tags/${nextTagVersion}`,
+      ref: `refs/tags/${nextTagName}`,
       sha: newTag.sha
     });
   }
 
-  return nextTagVersion;
+  return nextTagName;
 };

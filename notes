@@ -1,38 +1,8 @@
-inputs
-  source-branch
-    default: dev
-  target-branch
-    default: main
-  version:
-    required
-    example: X.X.X
+// merge action returns created tag value
+// release action creates a release with commits from prev to current tag
+// notification action pushes the link to created release to slack
 
-steps
-  validate version
-    get source tag
-    get target tag
-    compare <version> to source and target branches
-  merge branches
-    check if version is gt latest tag on sb or tb
-    branches HEADs are not the same
-    source branch HEAD is ahead of target branch HEAD
-    source branch does not have tag
-    check if can be merged
-
-
-    set <version> tag to source branch
-    push source branch tag
-    merge source branch to target branch
-    push target
-    pull target
-    merge target to source
-    push source
-
-    // separate action
-    create a release with details of what who when
-
-    // separate action
-    post message to slack channel about successful release
-
-https://github.com/marketplace/actions/merge-branch
-https://medium.com/@karlstad/create-a-github-actions-workflow-that-auto-merges-the-master-back-to-dev-branch-8b1ebe7009b3
+make full implementation
+split it by 2 actions:
+- merge action
+- release + notify action

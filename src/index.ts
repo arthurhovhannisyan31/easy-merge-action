@@ -5,11 +5,7 @@ import {
   type ReleaseType,
 } from "semver";
 
-import { getNextTagVersion, validateBranchesMerge } from "./helpers";
-
-// merge action returns created tag value
-// release action creates a release with commits from prev to current tag
-// notification action pushes the link to created release to slack
+import { getTagVersions, validateBranchesMerge } from "./helpers";
 
 try {
   const PAT = process.env.PAT;
@@ -29,6 +25,8 @@ try {
     repo
   } = github.context.repo;
 
+  console.log(github.context.payload.sender);
+
   // TODO extract to helper
   // const senderType = github.context.payload.sender?.type ?? "User";
   //
@@ -43,14 +41,6 @@ try {
   );
 
   const {
-    data: targetBranch
-  } = await octokit.rest.repos.getBranch({
-    owner,
-    repo,
-    branch: targetBranchName
-  });
-
-  const {
     data: sourceBranch
   } = await octokit.rest.repos.getBranch({
     owner,
@@ -58,20 +48,20 @@ try {
     branch: sourceBranchName
   });
 
-  const nextTagVersion = await getNextTagVersion(
+  const tagName = await getTagVersions(
     octokit,
     sourceBranch,
     releaseType
   );
 
-  core.setOutput("released_tag", nextTagVersion);
+  core.setOutput("released_tag", tagName);
 
   await octokit.rest.repos.merge({
     owner,
     repo,
     base: targetBranchName,
     head: sourceBranchName,
-    commit_message: `Release ${nextTagVersion}`
+    commit_message: `Release ${tagName}`
   });
 
   // no exising api for --no-ff merge
@@ -82,9 +72,30 @@ try {
   await exec.exec("git", ["merge", targetBranchName, "--ff"]);
   await exec.exec("git", ["push", "origin", "-f"]);
 
-  // try to rebase existing PRs
+  // TODO try to rebase existing PRs
 
-  // create release - separate action
+  /* create a release */
+  const {
+    data: releaseNotes
+  } = await octokit.rest.repos.generateReleaseNotes({
+    owner,
+    repo,
+    tag_name: tagName,
+  });
+
+  console.log(releaseNotes);
+
+  // const {
+  //   data: release
+  // } = await octokit.rest.repos.createRelease({
+  //   owner,
+  //   repo,
+  //   tag_name: tagName,
+  //   releaseNotes
+  // });
+  //
+  // console.log(release);
+
   // post message to slack - separate action
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
