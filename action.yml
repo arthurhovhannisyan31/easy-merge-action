@@ -19,9 +19,9 @@ inputs:
       - minor
       - patch
 outputs:
-  released_tag:
+  release_tag:
     description: "Released version tag value v#.#.#"
-  released_url:
+  release_url:
     description: "Link to release HTML"
 runs:
   using: "node20"

@@ -113,7 +113,7 @@ try {
     body: `${commitsNotes}\n\n${releaseNotes.body}`
   });
 
-  core.setOutput("released_tag", tagName);
+  core.setOutput("release_tag", tagName);
   core.setOutput("release_url", release.html_url);
 
   // post message to slack - separate action
