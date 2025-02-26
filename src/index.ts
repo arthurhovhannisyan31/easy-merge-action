@@ -89,6 +89,8 @@ try {
     owner,
     repo,
     tag_name: tagName,
+    name: releaseNotes.name,
+    body: releaseNotes.body
   });
 
   console.log({ release });
