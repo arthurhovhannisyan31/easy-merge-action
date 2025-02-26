@@ -65,12 +65,12 @@ try {
   });
 
   // no exising api for --no-ff merge
-  await exec.exec("git", ["fetch"]);
+  await exec.exec("git", ["fetch", "-q"]);
   // need to populate targetBranch in local context
-  await exec.exec("git", ["checkout", targetBranchName]);
-  await exec.exec("git", ["checkout", sourceBranchName]);
-  await exec.exec("git", ["merge", targetBranchName, "--ff"]);
-  await exec.exec("git", ["push", "origin", "-f"]);
+  await exec.exec("git", ["checkout", targetBranchName, "-q"]);
+  await exec.exec("git", ["checkout", sourceBranchName, "-q"]);
+  await exec.exec("git", ["merge", targetBranchName, "--ff", "-q"]);
+  await exec.exec("git", ["push", "origin", "-f", "-q"]);
 
   // TODO try to rebase existing PRs
 
