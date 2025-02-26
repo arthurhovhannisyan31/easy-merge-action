@@ -29,6 +29,6 @@ jobs:
           release_type: ${{ inputs.release_type }}
       - name: Log outputs
         run: |
-          echo ${{ steps.easy-release.outputs.released_tag }}
-          echo ${{ steps.easy-release.outputs.released_url }}
+          echo ${{ steps.easy-release.outputs.release_tag }}
+          echo ${{ steps.easy-release.outputs.release_url }}
 
