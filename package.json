@@ -1,6 +1,6 @@
 {
   "author": "Arthur Hovhannisyan",
-  "name": "easy-release-action",
+  "name": "easy-merge-action",
   "type": "module",
   "packageManager": "yarn@4.6.0",
   "scripts": {

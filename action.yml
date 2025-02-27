@@ -1,5 +1,5 @@
-name: "Easy release"
-description: "Merge branches and publish release in one click"
+name: "Easy merge"
+description: "Merge branches and set semantic tag"
 inputs:
   source_branch:
     description: "Feature branch to be merged with target branch"
@@ -20,7 +20,7 @@ inputs:
       - patch
 outputs:
   release_tag:
-    description: "Released version tag value v#.#.#"
+    description: "Semantic version tag value v#.#.#"
 runs:
   using: "node20"
   main: "dist/index.js"
