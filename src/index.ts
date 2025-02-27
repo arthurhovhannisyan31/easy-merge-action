@@ -1,14 +1,15 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
-import {
-  type ReleaseType,
-} from "semver";
 
 import {
-  createRelease,
-  getTagsData, processMerge,
+  getNextTagName,
+  processMerge,
   validateBranchesMerge
 } from "./helpers";
+
+import type {
+  ReleaseType,
+} from "semver";
 
 try {
   const PAT = process.env.PAT;
@@ -38,7 +39,7 @@ try {
     sourceBranchName,
   );
 
-  const [previousTag, tagName] = await getTagsData(
+  const tagName = await getNextTagName(
     octokit,
     releaseType
   );
@@ -50,17 +51,7 @@ try {
     tagName
   );
 
-  const release = await createRelease(
-    octokit,
-    sourceBranchName,
-    previousTag,
-    tagName
-  );
-
   core.setOutput("release_tag", tagName);
-  core.setOutput("release_url", release.html_url);
-
-  // post message to slack - separate action
 } catch (error: unknown) {
   core.setFailed((error as Error).message);
 }
