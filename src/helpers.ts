@@ -2,12 +2,12 @@ import * as exec from "@actions/exec";
 import * as github from "@actions/github";
 import { coerce, inc, type ReleaseType, type SemVer, valid } from "semver";
 
+import type {
+  GitTag,
+  Release,
+  Tag
+} from "./types";
 import type { GitHub } from "@actions/github/lib/utils";
-import type { components } from "@octokit/openapi-types";
-
-type GitTag = components["schemas"]["git-tag"];
-type Tag = components["schemas"]["tag"];
-type Release = components["schemas"]["release"];
 
 export const validateBranchesMerge = async (
   octokit: InstanceType<typeof GitHub>,
