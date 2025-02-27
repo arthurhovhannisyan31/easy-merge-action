@@ -1029,9 +1029,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"easy-release-action@workspace:.":
+"easy-merge-action@workspace:.":
   version: 0.0.0-use.local
-  resolution: "easy-release-action@workspace:."
+  resolution: "easy-merge-action@workspace:."
   dependencies:
     "@actions/core": "npm:^1.11.1"
     "@actions/exec": "npm:^1.1.1"

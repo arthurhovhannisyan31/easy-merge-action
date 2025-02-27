@@ -1,4 +1,4 @@
-name: Release
+name: Easy merge
 on:
   workflow_dispatch:
     inputs:
@@ -18,8 +18,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Easy release call
-        id: easy-release
+      - name: Easy merge
+        id: easy-merge
         uses: arthurhovhannisyan31/easy-merge-action@develop
         env:
           PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -29,5 +29,5 @@ jobs:
           release_type: ${{ inputs.release_type }}
       - name: Log outputs
         run: |
-          echo ${{ steps.easy-release.outputs.release_tag }}
+          echo ${{ steps.easy-merge.outputs.release_tag }}
 
