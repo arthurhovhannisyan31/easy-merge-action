@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Easy release call
         id: easy-release
-        uses: arthurhovhannisyan31/easy-release-action@develop
+        uses: arthurhovhannisyan31/easy-merge-action@develop
         env:
           PAT: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -30,5 +30,4 @@ jobs:
       - name: Log outputs
         run: |
           echo ${{ steps.easy-release.outputs.release_tag }}
-          echo ${{ steps.easy-release.outputs.release_url }}
 
