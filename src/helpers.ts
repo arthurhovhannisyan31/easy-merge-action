@@ -100,7 +100,7 @@ export const syncBranches = async (
   base: string,
   head: string
 ): Promise<void> => {
-  // no exising api for --no-ff merge
+  // no existing api for --no-ff merge
   await exec.exec("git", ["fetch", "-q"]);
   // need to populate targetBranch in local context
   await exec.exec("git", ["checkout", base, "-q"]);
