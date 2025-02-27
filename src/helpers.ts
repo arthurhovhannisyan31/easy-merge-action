@@ -2,6 +2,8 @@ import * as exec from "@actions/exec";
 import * as github from "@actions/github";
 import { coerce, inc, type ReleaseType, type SemVer, valid } from "semver";
 
+import { DEFAULT_VERSION } from "./constants";
+
 import type {
   GitTag,
 } from "./types";
@@ -48,9 +50,9 @@ export const getNextTagName = async (
   });
   const latestTag = tagsList?.[0];
 
-  const latestTagName = latestTag?.name;
+  const latestTagName = latestTag?.name ?? DEFAULT_VERSION;
 
-  if (!latestTagName || !valid(latestTagName)) {
+  if (!valid(latestTagName)) {
     throw new Error("Latest tag version is not valid, check git tags");
   }
 
