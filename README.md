@@ -1,8 +1,8 @@
-# easy-release-action
+# easy-merge-action
 
 # Description
 
-Branches tag and merge process automation action.
+Merges branches and sets semantic version tag.
 
 ## Usage
 ...
