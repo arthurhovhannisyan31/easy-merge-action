@@ -2,8 +2,8 @@
 
 ## Description
 
-Action helps to run basic validation rules on branches and does merge for branches. A semantic 
-versioned tag is assigned to merge commit.
+Action runs basic validation rules for branches and merges them with a semantic
+versioned tag.
 
 ## Inputs
 `source_branch` - the branch with features (required).
