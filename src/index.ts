@@ -12,9 +12,9 @@ import type {
 } from "semver";
 
 try {
-  const PAT = process.env.PAT;
+  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
-  if (!PAT) {
+  if (!GITHUB_TOKEN) {
     throw new Error("Failed reading access token");
   }
 
@@ -22,7 +22,7 @@ try {
   const targetBranchName = core.getInput("target_branch", { required: true });
   const releaseType = core.getInput("release_type", { required: true }) as ReleaseType;
 
-  const octokit = github.getOctokit(PAT);
+  const octokit = github.getOctokit(GITHUB_TOKEN);
 
   console.log(github.context.payload.sender);
 
