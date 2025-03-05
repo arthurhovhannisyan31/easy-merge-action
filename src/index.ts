@@ -38,11 +38,13 @@ try {
     targetBranchName,
     sourceBranchName,
   );
+  // notice branches are ok
 
   const tagName = await getNextTagName(
     octokit,
     releaseType
   );
+  // notice created tag
 
   await processMerge(
     octokit,

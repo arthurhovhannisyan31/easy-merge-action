@@ -30,4 +30,3 @@ jobs:
       - name: Log outputs
         run: |
           echo Released tag: ${{ steps.easy-merge.outputs.release_tag }}
-
