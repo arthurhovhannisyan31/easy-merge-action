@@ -129,15 +129,18 @@ export const processMerge = async (
     head,
     commit_message: `Release ${tagName}`
   });
+  // notice branches are merged
 
   await createTag(
     octokit,
     tagName,
     mergeCommit.sha
   );
+  // notice tag created
 
   await syncBranches(
     base,
     head
   );
+  // notice branches synced
 };
