@@ -8,9 +8,9 @@ on:
         default: "patch"
         type: choice
         options:
-          - major
-          - minor
           - patch
+          - minor
+          - major
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -22,7 +22,7 @@ jobs:
         id: easy-merge
         uses: arthurhovhannisyan31/easy-merge-action@develop
         env:
-          PAT: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           source_branch: "develop"
           target_branch: "main"

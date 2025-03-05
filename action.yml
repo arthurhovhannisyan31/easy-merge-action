@@ -15,9 +15,9 @@ inputs:
     default: "patch"
     type: choice
     options:
-      - major
-      - minor
       - patch
+      - minor
+      - major
 outputs:
   release_tag:
     description: "Semantic version tag value v#.#.#"
