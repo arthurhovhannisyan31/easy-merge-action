@@ -8,9 +8,9 @@ on:
         default: "patch"
         type: choice
         options:
-          - major
-          - minor
           - patch
+          - minor
+          - major
 jobs:
   main:
     runs-on: ubuntu-latest
