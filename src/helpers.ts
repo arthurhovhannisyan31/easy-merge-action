@@ -1,3 +1,4 @@
+import * as core from "@actions/core";
 import * as exec from "@actions/exec";
 import * as github from "@actions/github";
 import { coerce, inc, type ReleaseType, type SemVer, valid } from "semver";
@@ -32,6 +33,8 @@ export const validateBranchesMerge = async (
       `The '${head}' branch is not ahead of '${base}' branch. Rebase the '${head}' branch first.`
     );
   }
+
+  core.info("✔ Branches are valid for merge");
 };
 
 export const getNextTagName = async (
@@ -61,6 +64,8 @@ export const getNextTagName = async (
   if (!nextTagName) {
     throw new Error("Failed creating new tag");
   }
+
+  core.info(`✔ Next tag name created: ${nextTagName}`);
 
   return `v${nextTagName}`;
 };
@@ -129,18 +134,18 @@ export const processMerge = async (
     head,
     commit_message: `Release ${tagName}`
   });
-  // notice branches are merged
+  core.info(`✔ Branches '${base}' and '${head}' are merged`);
 
   await createTag(
     octokit,
     tagName,
     mergeCommit.sha
   );
-  // notice tag created
+  core.info(`✔ Tag ${tagName} assigned to merge commit`);
 
   await syncBranches(
     base,
     head
   );
-  // notice branches synced
+  core.info(`✔ Branches ${base} and ${head} are synced`);
 };

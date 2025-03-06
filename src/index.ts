@@ -38,13 +38,11 @@ try {
     targetBranchName,
     sourceBranchName,
   );
-  // notice branches are ok
 
   const tagName = await getNextTagName(
     octokit,
     releaseType
   );
-  // notice created tag
 
   await processMerge(
     octokit,
@@ -55,5 +53,5 @@ try {
 
   core.setOutput("release_tag", tagName);
 } catch (error: unknown) {
-  core.setFailed((error as Error).message);
+  core.setFailed(`⚠️ ${(error as Error).message}`);
 }
