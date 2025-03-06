@@ -147,5 +147,5 @@ export const processMerge = async (
     base,
     head
   );
-  core.info(`✔ Branches ${base} and ${head} are synced`);
+  core.info(`✔ Branch '${head}' is synced with '${base}'`);
 };
