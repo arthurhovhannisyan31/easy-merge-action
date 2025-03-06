@@ -12,8 +12,8 @@ versioned tag.
 
 `release_type` - semantic release type for tag versioning (required).
 
-## Secrets
-Action uses `GITHUB_TOKEN` which should be provided as an environment variable.
+## Env
+`GITHUB_TOKEN` - automatically generated token for workflow.
 
 ## Usage
 Please see the [release workflow](.github/workflows/release.yml) as a usage example.
