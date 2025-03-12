@@ -24,15 +24,6 @@ try {
 
   const octokit = github.getOctokit(GITHUB_TOKEN);
 
-  console.log(github.context.payload.sender);
-
-  // TODO extract to helper
-  // const senderType = github.context.payload.sender?.type ?? "User";
-  //
-  // if (!["maintainer", "admin"].includes(senderType)) {
-  //   throw new Error("Forbidden: No sufficient rights to call this action");
-  // }
-
   await validateBranchesMerge(
     octokit,
     targetBranchName,
