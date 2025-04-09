@@ -53,6 +53,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@arthurhovhannisyan31/easy-merge-action@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@arthurhovhannisyan31/easy-merge-action@workspace:."
+  dependencies:
+    "@actions/core": "npm:^1.11.1"
+    "@actions/exec": "npm:^1.1.1"
+    "@actions/github": "npm:^6.0.0"
+    "@eslint/compat": "npm:^1.2"
+    "@eslint/js": "npm:^9.18"
+    "@octokit/types": "npm:^13.8.0"
+    "@stylistic/eslint-plugin": "npm:^2.13.0"
+    "@types/node": "npm:^22.13.1"
+    "@types/semver": "npm:^7"
+    "@typescript-eslint/eslint-plugin": "npm:^8.20"
+    "@typescript-eslint/parser": "npm:^8.23.0"
+    "@vercel/ncc": "npm:^0.38.3"
+    eslint: "npm:^9.18.0"
+    eslint-import-resolver-typescript: "npm:^3.7.0"
+    eslint-plugin-import: "npm:^2.31.0"
+    husky: "npm:^9.0.11"
+    semver: "npm:^7.7.1"
+    typescript: "npm:^5.7.3"
+    typescript-eslint: "npm:^8.20"
+  languageName: unknown
+  linkType: soft
+
 "@eslint-community/eslint-utils@npm:^4.2.0, @eslint-community/eslint-utils@npm:^4.4.0":
   version: 4.4.1
   resolution: "@eslint-community/eslint-utils@npm:4.4.1"
@@ -1028,32 +1054,6 @@ __metadata:
   checksum: 10/9b1d3e1baefeaf7d70799db8774149cef33b97183a6addceeba0cf6b85ba23ee2686f302f14482006df32df75d32b17c509c143a3689627929e4a8efaf483952
   languageName: node
   linkType: hard
-
-"easy-merge-action@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "easy-merge-action@workspace:."
-  dependencies:
-    "@actions/core": "npm:^1.11.1"
-    "@actions/exec": "npm:^1.1.1"
-    "@actions/github": "npm:^6.0.0"
-    "@eslint/compat": "npm:^1.2"
-    "@eslint/js": "npm:^9.18"
-    "@octokit/types": "npm:^13.8.0"
-    "@stylistic/eslint-plugin": "npm:^2.13.0"
-    "@types/node": "npm:^22.13.1"
-    "@types/semver": "npm:^7"
-    "@typescript-eslint/eslint-plugin": "npm:^8.20"
-    "@typescript-eslint/parser": "npm:^8.23.0"
-    "@vercel/ncc": "npm:^0.38.3"
-    eslint: "npm:^9.18.0"
-    eslint-import-resolver-typescript: "npm:^3.7.0"
-    eslint-plugin-import: "npm:^2.31.0"
-    husky: "npm:^9.0.11"
-    semver: "npm:^7.7.1"
-    typescript: "npm:^5.7.3"
-    typescript-eslint: "npm:^8.20"
-  languageName: unknown
-  linkType: soft
 
 "emoji-regex@npm:^8.0.0":
   version: 8.0.0
