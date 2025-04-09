@@ -2,18 +2,11 @@
   "author": "Arthur Hovhannisyan",
   "private": true,
   "name": "@arthurhovhannisyan31/easy-merge-action",
-  "version": "1.0.0",
   "type": "module",
   "packageManager": "yarn@4.6.0",
   "repository": {
     "type": "git",
     "url": "git@github.com:arthurhovhannisyan31/easy-merge-action.git"
-  },
-  "publishConfig": {
-    "access": "restricted"
-  },
-  "exports": {
-    ".": "./src/*"
   },
   "scripts": {
     "build": "yarn ncc build ./src/index.ts -m --license licenses.txt",
