@@ -1,0 +1,14 @@
+{
+  "extends": "./configs/typescript/tsconfig.rules.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": [
+      "esnext",
+    ],
+    "types": [
+      "node"
+    ]
+  },
+}
