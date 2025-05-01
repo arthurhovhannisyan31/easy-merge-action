@@ -1,9 +1,15 @@
+<div align="center">
+  <h1><code>easy-merge-action</code></h1>
+</div>
+
 # Easy merge action
 
 ## Description
 
-Action runs basic validation rules for branches and merges them with a semantic
-versioned tag.
+Easy Merge Action is a GitHub Action that validates and merges branches using semantic versioning. 
+It takes in a source branch, a target branch, and a release type. 
+The action ensures merge readiness, generates the next semantic tag, merges the branches, tags the commit, 
+and syncs the target branch with the source. 
 
 ## Inputs
 `source_branch` - the branch with features (required).
