@@ -1,0 +1,26 @@
+name: "Easy merge"
+description: "Merge branches and set semantic tag"
+inputs:
+  source_branch:
+    description: "Feature branch to be merged with target branch"
+    default: "develop"
+    required: true
+  target_branch:
+    description: "Branch to merge features from source branch"
+    default: main
+    required: true
+  release_type:
+    description: "Semantic release type"
+    required: true
+    default: "patch"
+    type: choice
+    options:
+      - patch
+      - minor
+      - major
+outputs:
+  release_tag:
+    description: "Semantic version tag value v#.#.#"
+runs:
+  using: "node20"
+  main: "dist/index.js"
