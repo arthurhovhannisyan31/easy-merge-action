@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 
 import {
-  getNextTagName,
+  getNextTagVersion,
   processMerge,
   validateBranchesMerge
 } from "./helpers";
@@ -30,7 +30,7 @@ try {
     sourceBranchName,
   );
 
-  const tagName = await getNextTagName(
+  const tagVersion = await getNextTagVersion(
     octokit,
     releaseType
   );
@@ -39,10 +39,10 @@ try {
     octokit,
     targetBranchName,
     sourceBranchName,
-    tagName
+    tagVersion
   );
 
-  core.setOutput("release_tag", tagName);
+  core.setOutput("release_tag", `v${tagVersion}`);
 } catch (error: unknown) {
   core.setFailed(`⚠️ ${(error as Error).message}`);
 }

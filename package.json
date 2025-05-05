@@ -1,5 +1,6 @@
 {
   "author": "Arthur Hovhannisyan",
+  "version": "1.0.2",
   "private": true,
   "name": "@arthurhovhannisyan31/easy-merge-action",
   "type": "module",
