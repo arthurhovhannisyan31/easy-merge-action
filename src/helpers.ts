@@ -37,7 +37,7 @@ export const validateBranchesMerge = async (
   core.info("✔ Branches are valid for merge");
 };
 
-export const getNextTagName = async (
+export const getNextTagVersion = async (
   octokit: InstanceType<typeof GitHub>,
   releaseType: ReleaseType
 ): Promise<string> => {
@@ -53,21 +53,21 @@ export const getNextTagName = async (
   });
   const latestTag = tagsList?.[0];
 
-  const latestTagName = latestTag?.name ?? DEFAULT_VERSION;
+  const latestTagVersion = latestTag?.name ?? DEFAULT_VERSION;
 
-  if (!valid(latestTagName)) {
+  if (!valid(latestTagVersion)) {
     throw new Error("Latest tag version is not valid, check git tags");
   }
 
-  const nextTagName = inc(coerce(latestTagName) as SemVer, releaseType) as string;
+  const nextTagVersion = inc(coerce(latestTagVersion) as SemVer, releaseType) as string;
 
-  if (!nextTagName) {
+  if (!nextTagVersion) {
     throw new Error("Failed creating new tag");
   }
 
-  core.info(`✔ Next tag name created: ${nextTagName}`);
+  core.info(`✔ Next tag version created: ${nextTagVersion}`);
 
-  return `v${nextTagName}`;
+  return nextTagVersion;
 };
 
 export const createTag = async (
@@ -118,7 +118,7 @@ export const processMerge = async (
   octokit: InstanceType<typeof GitHub>,
   base: string,
   head: string,
-  tagName: string
+  tagVersion: string
 ): Promise<void> => {
   const {
     owner,
@@ -132,16 +132,16 @@ export const processMerge = async (
     repo,
     base,
     head,
-    commit_message: `Release ${tagName}`
+    commit_message: `Release v${tagVersion}`
   });
   core.info(`✔ Branches '${base}' and '${head}' are merged`);
 
   await createTag(
     octokit,
-    tagName,
+    `v${tagVersion}`,
     mergeCommit.sha
   );
-  core.info(`✔ Tag ${tagName} assigned to merge commit`);
+  core.info(`✔ Tag v${tagVersion} assigned to merge commit`);
 
   await syncBranches(
     base,
