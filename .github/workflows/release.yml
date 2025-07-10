@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - name: Easy merge
@@ -30,3 +32,8 @@ jobs:
       - name: Log outputs
         run: |
           echo Released tag: ${{ steps.easy-merge.outputs.release_tag }}
+      - name: Publish package
+        uses: ./.github/actions/publish
+        with:
+          node-auth-token: ${{ secrets.GITHUB_TOKEN }}
+          registry-url: "https://npm.pkg.github.com"

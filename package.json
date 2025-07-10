@@ -1,6 +1,8 @@
 {
   "author": "Arthur Hovhannisyan",
+  "description": "Github merge action package",
   "version": "1.0.2",
+  "scope": "arthurhovhannisyan31",
   "private": true,
   "name": "@arthurhovhannisyan31/easy-merge-action",
   "type": "module",
@@ -8,6 +10,20 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:arthurhovhannisyan31/easy-merge-action.git"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "restricted",
+    "provenance": true
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.js",
+  "exports": {
+    "import": "./dist/index.js",
+    "types": "./dist/index.d.js"
   },
   "scripts": {
     "build": "yarn ncc build ./src/index.ts -m --license licenses.txt",
